@@ -11,14 +11,22 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.util.Date;
 
-
 @Path("/check")
 @Singleton
 public class CheckSchedule {
 
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public Schedule echo(@QueryParam("start") Date startDate, @QueryParam("end") Date endDate) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Schedule checkSchedule(@QueryParam("start") Date startDate, @QueryParam("end") Date endDate) {
         return new Schedule(startDate, endDate);
     }
+
+    @GET
+    @Path("/available")
+    @Produces(MediaType.APPLICATION_JSON)
+    public boolean available(@QueryParam("start") Date startDate, @QueryParam("end") Date endDate) {
+        return true;
+    }
+
+
 }

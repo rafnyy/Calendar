@@ -1,17 +1,13 @@
 package cal;
 
-
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 public class Schedule {
     private Date startDate;
     private Date endDate;
 
-    private Set<Hour> booked;
-    private Set<Hour> available;
-
-
+    private List<ScheduleDelta> deltas;
 
     public Schedule(Date startDate, Date endDate) {
         this.startDate = startDate;
@@ -24,13 +20,5 @@ public class Schedule {
 
     public Date getEndDate() {
         return endDate;
-    }
-
-    public Set<Hour> getBooked() {
-        return booked;
-    }
-
-    public Set<Hour> getAvailable() {
-        return available;
     }
 }

@@ -4,7 +4,6 @@ import java.util.Date;
 
 public class Hour {
     private Date start;
-    private final int hour = 1000 * 60 * 60;
 
     public Hour(Date start) {
         this.start = start;
@@ -19,6 +18,6 @@ public class Hour {
     }
 
     public Date getEnd() {
-        return new Date(start.getTime() + hour);
+        return new Date(start.getTime() + Constants.millisecondsInAnHour);
     }
 }
