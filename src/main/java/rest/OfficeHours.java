@@ -19,7 +19,7 @@ public class OfficeHours {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Schedule checkAppotinments(@QueryParam("start") Date startDate, @QueryParam("end") Date endDate) {
+    public Schedule checkAppointments(@QueryParam("start") Date startDate, @QueryParam("end") Date endDate) {
         return new Schedule(startDate, endDate);
     }
 
