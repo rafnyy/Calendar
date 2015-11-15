@@ -2,10 +2,10 @@ package rest;
 
 import cal.Schedule;
 import com.google.inject.Singleton;
+import org.joda.time.Instant;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.Date;
 
 @Path("/office-hours")
 @Singleton
@@ -13,13 +13,13 @@ public class OfficeHours {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void set(Date start, int duration) {
+    public void set(Instant start, int duration) {
 
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Schedule checkAppointments(@QueryParam("start") Date startDate, @QueryParam("end") Date endDate) {
+    public Schedule checkAppointments(@QueryParam("start") Instant startDate, @QueryParam("end") Instant endDate) {
         return new Schedule(startDate, endDate);
     }
 

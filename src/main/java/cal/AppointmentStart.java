@@ -1,14 +1,12 @@
 package cal;
 
-
+import org.joda.time.Instant;
 import users.Client;
 
-import java.util.Date;
-
-public class AppointmentStart extends ScheduleDelta{
+public class AppointmentStart extends ScheduleDelta {
     private Client client;
 
-    public AppointmentStart(Client client, Date time) {
+    public AppointmentStart(Client client, Instant time) {
         super(time, Constants.STATUS.BOOKED);
         this.client = client;
     }

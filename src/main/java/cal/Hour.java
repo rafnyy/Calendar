@@ -1,23 +1,10 @@
 package cal;
 
-import java.util.Date;
+import org.joda.time.Instant;
 
-public class Hour {
-    private Date start;
+public class Hour extends TimePeriod {
 
-    public Hour(Date start) {
-        this.start = start;
-    }
-
-    public void setStart(Date start) {
-        this.start = start;
-    }
-
-    public Date getStart() {
-        return start;
-    }
-
-    public Date getEnd() {
-        return new Date(start.getTime() + Constants.millisecondsInAnHour);
+    public Hour(Instant start) {
+        super(start, Constants.millisecondsInAnHour);
     }
 }

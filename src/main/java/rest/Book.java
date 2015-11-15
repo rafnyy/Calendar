@@ -5,7 +5,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import database.DatabaseConnection;
 import database.NamedParameterStatement;
-import org.joda.time.Instant;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
@@ -31,10 +30,7 @@ public class Book {
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    public void book() {
-
-        Instant instant = new Instant();
-
+    public void book(Booking booking) {
         try
         {
             String insertTableSQL = "INSERT INTO \"Schedule\""
@@ -42,17 +38,67 @@ public class Book {
                 + "(:" + CLIENT_ID + ", :" + CONSULTANT_ID + ", :" + TO_STATUS + ", :" + START + ", :" + DURATION_MS + ")";
 
             NamedParameterStatement preparedStatement = new NamedParameterStatement(connection.getConnection(), insertTableSQL);
-            preparedStatement.setInt(CLIENT_ID, 4);
-            preparedStatement.setInt(CONSULTANT_ID, 4);
-            preparedStatement.setString(TO_STATUS, "BOOKED");
-            preparedStatement.setTimestamp(START, new Timestamp(instant.getMillis()));
-            preparedStatement.setInt(DURATION_MS, Constants.millisecondsInAnHour);
+            preparedStatement.setInt(CLIENT_ID, booking.getClientId());
+            preparedStatement.setInt(CONSULTANT_ID, booking.getConsultantId());
+            preparedStatement.setString(TO_STATUS, Constants.STATUS.BOOKED.name());
+            preparedStatement.setTimestamp(START, new Timestamp(booking.getStartTime()));
+            preparedStatement.setInt(DURATION_MS, booking.getDurationMillis());
 
-            preparedStatement .executeUpdate();
+            preparedStatement.executeUpdate();
         }
         catch (SQLException se) {
             System.err.println("Threw a SQLException booking an appointment.");
             System.err.println(se.getMessage());
+        }
+    }
+
+    private static class Booking {
+        private static int clientId;
+        private static int consultantId;
+        private static long startTime;
+        private static int durationMillis;
+
+        public Booking() {
+
+        }
+
+        public Booking(int clientId, int consultantId, long startTime, int durationMillis) {
+            this.clientId = clientId;
+            this.consultantId = consultantId;
+            this.startTime = startTime;
+            this.durationMillis = durationMillis;
+        }
+
+        public int getClientId() {
+            return clientId;
+        }
+
+        public void setClientId(int clientId) {
+            this.clientId = clientId;
+        }
+
+        public int getConsultantId() {
+            return consultantId;
+        }
+
+        public void setConsultantId(int consultantId) {
+            this.consultantId = consultantId;
+        }
+
+        public long getStartTime() {
+            return startTime;
+        }
+
+        public void setStartTime(long startTime) {
+            this.startTime = startTime;
+        }
+
+        public int getDurationMillis() {
+            return durationMillis;
+        }
+
+        public void setDurationMillis(int durationMillis) {
+            this.durationMillis = durationMillis;
         }
     }
 }

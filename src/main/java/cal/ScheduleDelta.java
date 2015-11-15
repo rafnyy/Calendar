@@ -1,21 +1,21 @@
 package cal;
 
-import java.util.Date;
+import org.joda.time.Instant;
 
 public abstract class ScheduleDelta {
-    private Date time;
+    private Instant time;
     private Constants.STATUS toStatus;
 
-    public ScheduleDelta(Date time, Constants.STATUS toStatus) {
+    public ScheduleDelta(Instant time, Constants.STATUS toStatus) {
         this.time = time;
         this.toStatus = toStatus;
     }
 
-    public Date getTime() {
+    public Instant getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(Instant time) {
         this.time = time;
     }
 
