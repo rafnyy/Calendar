@@ -1,7 +1,9 @@
 package users;
 
-public class Consultant extends User {
-    public Consultant(String firstName, String lastName, String email) {
-        super(firstName, lastName, email);
+import java.util.UUID;
+
+public class Consultant extends UserDTO {
+    public Consultant(UUID uuid, String firstName, String lastName, String email) {
+        super(uuid, firstName, lastName, email, false);
     }
 }

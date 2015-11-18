@@ -7,7 +7,7 @@ public class AppointmentStart extends ScheduleDelta {
     private Client client;
 
     public AppointmentStart(Client client, Instant time) {
-        super(time, Constants.STATUS.BOOKED);
+        super(time, Constants.Schedule.STATUS.BOOKED);
         this.client = client;
     }
 
