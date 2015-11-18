@@ -20,15 +20,21 @@ import java.util.UUID;
 public class Book {
 
     private final DatabaseConnection connection;
+    private final OfficeHours officeHours;
 
     @Inject
-    public Book(DatabaseConnection connection) {
+    public Book(DatabaseConnection connection, OfficeHours officeHours) {
         this.connection = connection;
+        this.officeHours = officeHours;
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void book(Booking booking) {
+        if(!officeHours.available(booking.getConsultantId(), booking.getStartTime(), booking.getStartTime() + booking.getDurationMillis())) {
+            //TODO: throw or some other status code
+        }
+
         try
         {
             String startBookingSQL = "INSERT INTO \"Schedule\""
@@ -44,11 +50,10 @@ public class Book {
             startBookingStatement.executeUpdate();
 
             String endBookingSQL = "INSERT INTO \"Schedule\""
-                    + "(" + Constants.Schedule.CLIENT_ID + ", " + Constants.Schedule.CONSULTANT_ID + ", " + Constants.Schedule.TO_STATUS + ", " + Constants.Schedule.START + ") VALUES"
-                    + "(:" + Constants.Schedule.CLIENT_ID + ", :" + Constants.Schedule.CONSULTANT_ID + ", :" + Constants.Schedule.TO_STATUS + ", :" + Constants.Schedule.START + ")";
+                    + "(" + Constants.Schedule.CONSULTANT_ID + ", " + Constants.Schedule.TO_STATUS + ", " + Constants.Schedule.START + ") VALUES"
+                    + "(:" + Constants.Schedule.CONSULTANT_ID + ", :" + Constants.Schedule.TO_STATUS + ", :" + Constants.Schedule.START + ")";
 
             NamedParameterStatement endBookingStatement = new NamedParameterStatement(connection.getConnection(), endBookingSQL);
-            endBookingStatement.setObject(Constants.Schedule.CLIENT_ID, booking.getClientId());
             endBookingStatement.setObject(Constants.Schedule.CONSULTANT_ID, booking.getConsultantId());
             endBookingStatement.setString(Constants.Schedule.TO_STATUS, Constants.Schedule.STATUS.AVAILABLE.name());
             endBookingStatement.setTimestamp(Constants.Schedule.START, new Timestamp(booking.getStartTime() + booking.getDurationMillis()));
@@ -59,13 +64,6 @@ public class Book {
             System.err.println("Threw a SQLException booking an appointment.");
             System.err.println(se.getMessage());
         }
-    }
-
-    @PUT
-    @Path("/cancel")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void cancel(Booking booking) {
-        // TODO: implement
     }
 
     private static class Booking {
