@@ -2,7 +2,7 @@ package cal;
 
 import org.joda.time.Instant;
 
-public abstract class ScheduleDelta {
+public class ScheduleDelta {
     private Instant time;
     private Constants.Schedule.STATUS toStatus;
 

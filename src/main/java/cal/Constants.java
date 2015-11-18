@@ -6,7 +6,7 @@ public class Constants {
         public static final String FIRST_NAME = "first_name";
         public static final String LAST_NAME = "last_name";
         public static final String EMAIL = "email";
-        public static final String CLIENT = "client";
+        public static final String IS_CLIENT = "client";
     }
 
     public static class Schedule {

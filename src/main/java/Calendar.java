@@ -22,7 +22,7 @@ public class Calendar {
         Server server = new Server(8080);
 
         ServletContextHandler context = new ServletContextHandler(server, "/", ServletContextHandler.SESSIONS);
-        context.addFilter(GuiceFilter.class, "/*", EnumSet.<javax.servlet.DispatcherType>of(javax.servlet.DispatcherType.REQUEST, javax.servlet.DispatcherType.ASYNC));
+        context.addFilter(GuiceFilter.class, "/*", EnumSet.of(javax.servlet.DispatcherType.REQUEST, javax.servlet.DispatcherType.ASYNC));
         context.addServlet(DefaultServlet.class, "/*");
 
         // Start things up! By using the server.join() the server thread will join with the current thread.

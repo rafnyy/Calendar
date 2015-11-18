@@ -5,6 +5,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import database.DatabaseConnection;
 import database.NamedParameterStatement;
+import users.Client;
+import users.Consultant;
 import users.UserDTO;
 
 import javax.ws.rs.*;
@@ -41,9 +43,73 @@ public class User {
                 String firstName = resultSet.getString(Constants.Client.FIRST_NAME);
                 String lastName = resultSet.getString(Constants.Client.LAST_NAME);
                 String email = resultSet.getString(Constants.Client.EMAIL);
-                boolean isClient = resultSet.getBoolean(Constants.Client.CLIENT);
+                boolean isClient = resultSet.getBoolean(Constants.Client.IS_CLIENT);
 
                 user = new UserDTO(uuid, firstName, lastName, email, isClient);
+            }
+        }
+        catch (SQLException se) {
+            System.err.println("Threw a SQLException retrieving a user.");
+            System.err.println(se.getMessage());
+        }
+
+        return user;
+    }
+
+    @GET
+    @Path("/consultant/{uuid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Consultant getConsultantFromUUID(@PathParam("uuid") UUID uuid) {
+        Consultant user = null;
+
+        try
+        {
+            String getRowSql = "SELECT * FROM \"Users\" WHERE "
+                    + Constants.Client.UUID_COL_NAME + "=:" + Constants.Client.UUID_COL_NAME + " AND "
+                    + Constants.Client.IS_CLIENT + " IS FALSE";
+
+            NamedParameterStatement preparedStatement = new NamedParameterStatement(connection.getConnection(), getRowSql);
+            preparedStatement.setObject(Constants.Client.UUID_COL_NAME, uuid);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()) {
+                String firstName = resultSet.getString(Constants.Client.FIRST_NAME);
+                String lastName = resultSet.getString(Constants.Client.LAST_NAME);
+                String email = resultSet.getString(Constants.Client.EMAIL);
+
+                user = new Consultant(uuid, firstName, lastName, email);
+            }
+        }
+        catch (SQLException se) {
+            System.err.println("Threw a SQLException retrieving a user.");
+            System.err.println(se.getMessage());
+        }
+
+        return user;
+    }
+
+    @GET
+    @Path("/client/{uuid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Client getClientFromUUID(@PathParam("uuid") UUID uuid) {
+        Client user = null;
+
+        try
+        {
+            String getRowSql = "SELECT * FROM \"Users\" WHERE "
+                    + Constants.Client.UUID_COL_NAME + "=:" + Constants.Client.UUID_COL_NAME +
+                    " AND " + Constants.Client.IS_CLIENT + " IS TRUE";
+
+            NamedParameterStatement preparedStatement = new NamedParameterStatement(connection.getConnection(), getRowSql);
+            preparedStatement.setObject(Constants.Client.UUID_COL_NAME, uuid);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()) {
+                String firstName = resultSet.getString(Constants.Client.FIRST_NAME);
+                String lastName = resultSet.getString(Constants.Client.LAST_NAME);
+                String email = resultSet.getString(Constants.Client.EMAIL);
+
+                user = new Client(uuid, firstName, lastName, email);
             }
         }
         catch (SQLException se) {
@@ -72,7 +138,7 @@ public class User {
             if(resultSet.next()) {
                 UUID uuid = (UUID) resultSet.getObject(Constants.Client.UUID_COL_NAME);
 
-                boolean isClient = resultSet.getBoolean(Constants.Client.CLIENT);
+                boolean isClient = resultSet.getBoolean(Constants.Client.IS_CLIENT);
 
                 user = new UserDTO(uuid, firstName, lastName, email, isClient);
             }
@@ -103,15 +169,15 @@ public class User {
         try
         {
             String insertTableSQL = "INSERT INTO \"Users\""
-                    + "(" + Constants.Client.FIRST_NAME + ", " + Constants.Client.LAST_NAME + ", " + Constants.Client.EMAIL + ", " + Constants.Client.UUID_COL_NAME + ", " + Constants.Client.CLIENT + ") VALUES"
-                    + "(:" +  Constants.Client.FIRST_NAME + ", :" + Constants.Client.LAST_NAME + ", :" + Constants.Client.EMAIL + ", :" + Constants.Client.UUID_COL_NAME + ", :" + Constants.Client.CLIENT + ")";
+                    + "(" + Constants.Client.FIRST_NAME + ", " + Constants.Client.LAST_NAME + ", " + Constants.Client.EMAIL + ", " + Constants.Client.UUID_COL_NAME + ", " + Constants.Client.IS_CLIENT + ") VALUES"
+                    + "(:" +  Constants.Client.FIRST_NAME + ", :" + Constants.Client.LAST_NAME + ", :" + Constants.Client.EMAIL + ", :" + Constants.Client.UUID_COL_NAME + ", :" + Constants.Client.IS_CLIENT + ")";
 
             NamedParameterStatement preparedStatement = new NamedParameterStatement(connection.getConnection(), insertTableSQL);
             preparedStatement.setString(Constants.Client.FIRST_NAME, newUser.getFirstName());
             preparedStatement.setString(Constants.Client.LAST_NAME, newUser.getLastName());
             preparedStatement.setString(Constants.Client.EMAIL, newUser.getEmail());
             preparedStatement.setObject(Constants.Client.UUID_COL_NAME, UUID.randomUUID());
-            preparedStatement.setBoolean(Constants.Client.CLIENT, isClient);
+            preparedStatement.setBoolean(Constants.Client.IS_CLIENT, isClient);
 
             preparedStatement.executeUpdate();
         }
@@ -131,9 +197,9 @@ public class User {
         }
 
         public UserInfo(String firstName, String lastName, String email) {
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.email = email;
+            UserInfo.firstName = firstName;
+            UserInfo.lastName = lastName;
+            UserInfo.email = email;
         }
 
         public String getFirstName() {
@@ -141,7 +207,7 @@ public class User {
         }
 
         public void setFirstName(String firstName) {
-            this.firstName = firstName;
+            UserInfo.firstName = firstName;
         }
 
         public String getLastName() {
@@ -149,7 +215,7 @@ public class User {
         }
 
         public void setLastName(String lastName) {
-            this.lastName = lastName;
+            UserInfo.lastName = lastName;
         }
 
         public String getEmail() {
@@ -157,7 +223,7 @@ public class User {
         }
 
         public void setEmail(String email) {
-            this.email = email;
+            UserInfo.email = email;
         }
     }
 }

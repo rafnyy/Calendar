@@ -79,10 +79,10 @@ public class Book {
         }
 
         public Booking(UUID clientId, UUID consultantId, long startTime, int durationMillis) {
-            this.clientId = clientId;
-            this.consultantId = consultantId;
-            this.startTime = startTime;
-            this.durationMillis = durationMillis;
+            Booking.clientId = clientId;
+            Booking.consultantId = consultantId;
+            Booking.startTime = startTime;
+            Booking.durationMillis = durationMillis;
         }
 
         public UUID getClientId() {
@@ -90,7 +90,7 @@ public class Book {
         }
 
         public void setClientId(UUID clientId) {
-            this.clientId = clientId;
+            Booking.clientId = clientId;
         }
 
         public UUID getConsultantId() {
@@ -98,7 +98,7 @@ public class Book {
         }
 
         public void setConsultantId(UUID consultantId) {
-            this.consultantId = consultantId;
+            Booking.consultantId = consultantId;
         }
 
         public long getStartTime() {
@@ -106,7 +106,7 @@ public class Book {
         }
 
         public void setStartTime(long startTime) {
-            this.startTime = startTime;
+            Booking.startTime = startTime;
         }
 
         public int getDurationMillis() {
@@ -114,7 +114,7 @@ public class Book {
         }
 
         public void setDurationMillis(int durationMillis) {
-            this.durationMillis = durationMillis;
+            Booking.durationMillis = durationMillis;
         }
     }
 }

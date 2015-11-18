@@ -1,13 +1,9 @@
 package cal;
 
-import com.google.inject.Inject;
-import database.DatabaseConnection;
 import org.joda.time.Instant;
+import users.Consultant;
 
 import java.util.List;
-
-import com.google.inject.assistedinject.*;
-import users.Consultant;
 
 public class Schedule {
     private Consultant consultant;
@@ -17,12 +13,12 @@ public class Schedule {
     private List<ScheduleDelta> deltas;
     private Constants.Schedule.STATUS startStatus;
 
-     public Schedule(@Assisted Consultant consultant, @Assisted("startDate") Instant startDate, @Assisted("endDate") Instant endDate) {
+    public Schedule(Consultant consultant, Instant startDate, Instant endDate, List<ScheduleDelta> deltas, Constants.Schedule.STATUS startStatus) {
         this.consultant = consultant;
         this.startDate = startDate;
         this.endDate = endDate;
-
-
+        this.deltas = deltas;
+        this.startStatus = startStatus;
     }
 
     public Consultant getConsultant() {
@@ -35,5 +31,13 @@ public class Schedule {
 
     public Instant getEndDate() {
         return endDate;
+    }
+
+    public List<ScheduleDelta> getDeltas() {
+        return deltas;
+    }
+
+    public Constants.Schedule.STATUS getStartStatus() {
+        return startStatus;
     }
 }
