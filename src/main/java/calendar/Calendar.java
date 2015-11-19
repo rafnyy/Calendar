@@ -1,3 +1,5 @@
+package calendar;
+
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Stage;
@@ -22,14 +24,13 @@ public class Calendar {
         Server server = new Server(8080);
 
         ServletContextHandler context = new ServletContextHandler(server, "/", ServletContextHandler.SESSIONS);
-        context.addFilter(GuiceFilter.class, "/*", EnumSet.of(javax.servlet.DispatcherType.REQUEST, javax.servlet.DispatcherType.ASYNC));
+        context.setResourceBase("src/main/webapp");
+        context.addFilter(GuiceFilter.class, Constants.Api.ROOT + "/*", EnumSet.of(javax.servlet.DispatcherType.REQUEST, javax.servlet.DispatcherType.ASYNC));
         context.addServlet(DefaultServlet.class, "/*");
 
         // Start things up! By using the server.join() the server thread will join with the current thread.
         // See "http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Thread.html#join()" for more details.
         server.start();
         server.join();
-
-
     }
 }

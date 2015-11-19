@@ -1,5 +1,6 @@
-package cal;
+package calendar.schedule;
 
+import calendar.Constants;
 import org.joda.time.Instant;
 
 public class ScheduleDelta {

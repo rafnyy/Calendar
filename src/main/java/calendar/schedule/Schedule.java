@@ -1,7 +1,8 @@
-package cal;
+package calendar.schedule;
 
+import calendar.Constants;
+import calendar.user.Consultant;
 import org.joda.time.Instant;
-import users.Consultant;
 
 import java.util.List;
 

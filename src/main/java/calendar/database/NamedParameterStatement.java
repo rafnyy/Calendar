@@ -1,4 +1,4 @@
-package database;
+package calendar.database;
 
 import java.sql.*;
 import java.util.*;
@@ -19,7 +19,7 @@ public class NamedParameterStatement {
      * Creates a NamedParameterStatement.  Wraps a call to
      * c.{@link Connection#prepareStatement(java.lang.String)
     prepareStatement}.
-     * @param connection the database connection
+     * @param connection the calendar.database connection
      * @param query      the parameterized query
      * @throws SQLException if the statement could not be created
      */

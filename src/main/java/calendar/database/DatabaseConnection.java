@@ -1,4 +1,4 @@
-package database;
+package calendar.database;
 
 import com.google.inject.Singleton;
 

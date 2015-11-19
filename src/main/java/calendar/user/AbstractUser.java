@@ -1,8 +1,8 @@
-package users;
+package calendar.user;
 
 import java.util.UUID;
 
-public class UserDTO {
+public abstract class AbstractUser {
     private UUID uuid;
 
     private String firstName;
@@ -11,7 +11,7 @@ public class UserDTO {
 
     private boolean isClient;
 
-    public UserDTO(UUID uuid, String firstName, String lastName, String email, boolean isClient) {
+    public AbstractUser(UUID uuid, String firstName, String lastName, String email, boolean isClient) {
         this.uuid = uuid;
 
         this.firstName = firstName;
