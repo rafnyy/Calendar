@@ -92,7 +92,7 @@ public class OfficeHours {
 
         }
 
-        public Availability(UUID clientId, UUID consultantId, long startTime, int durationMillis) {
+        public Availability(UUID consultantId, long startTime, int durationMillis) {
             this.consultantId = consultantId;
             this.startTime = startTime;
             this.durationMillis = durationMillis;

@@ -9,6 +9,27 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.4.0/fullcalendar.min.js"></script>
     <script>
 
+    function addAvailable(status, start, end, events) {
+       if (status == 'AVAILABLE') {
+            events.push({
+                title: status,
+                start: start,
+                end: currEnd,
+                rendering: 'background'
+            });
+        }
+    }
+
+    function addBooked(status, start, end, events) {
+        if (status == 'BOOKED') {
+            events.push({
+                title: "Booked by client",
+                start: start,
+                end: end
+            });
+        }
+    }
+
     $(document).ready(function() {
 
         $('#client-calendar').fullCalendar({
@@ -45,20 +66,15 @@
                         var prevStart = start;
 
                         for (var i = 0; i < data.deltas.length; i++) {
-                            var end = $.fullCalendar.moment(data.deltas[i].time.millis);
+                            var currEnd = $.fullCalendar.moment(data.deltas[i].time.millis);
 
-                            if (prevStatus == 'AVAILABLE') {
-                                events.push({
-                                    title: prevStatus,
-                                    start: prevStart,
-                                    end: end,
-                                    rendering: 'background'
-                                });
-                            }
+                            addAvailable(prevStatus, prevStart, currEnd, events);
 
                             prevStatus = data.deltas[i].toStatus;
-                            prevStart = end;
+                            prevStart = currEnd;
                         }
+
+                        addAvailable(prevStatus, prevStart, end, events);
 
                         callback(events);
                     }
@@ -69,7 +85,7 @@
         $('#consultant-calendar').fullCalendar({
             // put your options and callbacks here
             header: {
-                left: 'prev,next,today',
+                left: 'prev,next',
                 center: 'title',
                 right: 'agendaWeek,agendaDay'
             },
@@ -101,26 +117,17 @@
                         var prevStart = start;
 
                         for (var i = 0; i < data.deltas.length; i++) {
-                            var end = $.fullCalendar.moment(data.deltas[i].time.millis);
+                            var currEnd = $.fullCalendar.moment(data.deltas[i].time.millis);
 
-                            if (prevStatus == 'AVAILABLE') {
-                                events.push({
-                                    title: prevStatus,
-                                    start: prevStart,
-                                    end: end,
-                                    rendering: 'background'
-                                });
-                            } else if (prevStatus == 'BOOKED') {
-                                events.push({
-                                    title: "Booked by client",
-                                    start: prevStart,
-                                    end: end
-                                });
-                            }
+                            addAvailable(prevStatus, prevStart, currEnd, events);
+                            addBooked(prevStatus, prevStart, currEnd, events);
 
                             prevStatus = data.deltas[i].toStatus;
-                            prevStart = end;
+                            prevStart = currEnd;
                         }
+
+                        addAvailable(prevStatus, prevStart, end, events);
+                        addBooked(prevStatus, prevStart, end, events);
 
                         callback(events);
                     }
