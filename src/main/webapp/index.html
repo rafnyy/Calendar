@@ -2,7 +2,6 @@
 <html>
 <head>
     <meta charset='utf-8' />
-    <!--script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script-->
     <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.4.0/fullcalendar.min.css" rel="stylesheet">
     <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.4.0/fullcalendar.print.css" rel="stylesheet" media="print">
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
@@ -12,10 +11,122 @@
 
     $(document).ready(function() {
 
-        // page is now ready, initialize the calendar...
-
-        $('#calendar').fullCalendar({
+        $('#client-calendar').fullCalendar({
             // put your options and callbacks here
+            header: {
+                left: 'prev,next',
+                center: 'title',
+                right: 'agendaWeek,agendaDay'
+            },
+			selectable: true,
+			selectHelper: true,
+			select: function(start, end) {
+				var eventData = {
+                    title: 'BOOKING',
+                    start: start,
+                    end: end
+                };
+
+                // TODO: make rest call to back end /book
+                // If 204 then render, else message
+                $('#client-calendar').fullCalendar('renderEvent', eventData, true); // stick? = true
+                $('#client-calendar').fullCalendar('unselect');
+			},
+            editable: true,
+			eventLimit: true,
+			events: function(start, end, timezone, callback) {
+                $.ajax({
+                    url: 'http://localhost:8080/api/office-hours/5c8d95d1-3ef4-4bdd-85ca-267bb6cd380d?startDate=' + start.unix() + '000&endDate=' + end.unix() + '000',
+                    type: 'GET',
+                    success: function(data) {
+                        var events = [];
+
+                        var prevStatus = data.startStatus;
+                        var prevStart = start;
+
+                        for (var i = 0; i < data.deltas.length; i++) {
+                            var end = $.fullCalendar.moment(data.deltas[i].time.millis);
+
+                            if (prevStatus == 'AVAILABLE') {
+                                events.push({
+                                    title: prevStatus,
+                                    start: prevStart,
+                                    end: end,
+                                    rendering: 'background'
+                                });
+                            }
+
+                            prevStatus = data.deltas[i].toStatus;
+                            prevStart = end;
+                        }
+
+                        callback(events);
+                    }
+                });
+            }
+        })
+
+        $('#consultant-calendar').fullCalendar({
+            // put your options and callbacks here
+            header: {
+                left: 'prev,next,today',
+                center: 'title',
+                right: 'agendaWeek,agendaDay'
+            },
+			selectable: true,
+			selectHelper: true,
+			select: function(start, end) {
+				var eventData = {
+                    title: 'AVAILABLE',
+                    rendering: 'background',
+                    start: start,
+                    end: end
+                };
+
+                // TODO: make rest call to back end set
+                // If 204 then render, else message
+                $('#consultant-calendar').fullCalendar('renderEvent', eventData, true); // stick? = true
+                $('#consultant-calendar').fullCalendar('unselect');
+			},
+            editable: true,
+			eventLimit: true,
+			events: function(start, end, timezone, callback) {
+                $.ajax({
+                    url: 'http://localhost:8080/api/office-hours/5c8d95d1-3ef4-4bdd-85ca-267bb6cd380d?startDate=' + start.unix() + '000&endDate=' + end.unix() + '000',
+                    type: 'GET',
+                    success: function(data) {
+                        var events = [];
+
+                        var prevStatus = data.startStatus;
+                        var prevStart = start;
+
+                        for (var i = 0; i < data.deltas.length; i++) {
+                            var end = $.fullCalendar.moment(data.deltas[i].time.millis);
+
+                            if (prevStatus == 'AVAILABLE') {
+                                events.push({
+                                    title: prevStatus,
+                                    start: prevStart,
+                                    end: end,
+                                    rendering: 'background'
+                                });
+                            } else if (prevStatus == 'BOOKED') {
+                                events.push({
+                                    title: "Booked by client",
+                                    start: prevStart,
+                                    end: end
+                                });
+                            }
+
+                            prevStatus = data.deltas[i].toStatus;
+                            prevStart = end;
+                        }
+
+                        callback(events);
+                    }
+                });
+            }
+
         })
 
     });
@@ -39,7 +150,7 @@
 </head>
 <body>
 
-<div id='calendar'></div>
+<div id='client-calendar'></div>
 
 </body>
 </html>
