@@ -52,6 +52,27 @@ public class UserDB {
         return user;
     }
 
+    public AbstractUser getUserByEmail(String email) throws SQLException {
+        String getRowSql = "SELECT * FROM " + USERS_TABLE + " WHERE "
+                 + Constants.User.EMAIL + "=:" + Constants.User.EMAIL;
+
+        NamedParameterStatement preparedStatement = new NamedParameterStatement(connection.getConnection(), getRowSql);
+        preparedStatement.setString(Constants.User.EMAIL, email);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
+            UUID uuid = (UUID) resultSet.getObject(Constants.User.UUID_COL_NAME);
+            String firstName = resultSet.getString(Constants.User.FIRST_NAME);
+            String lastName = resultSet.getString(Constants.User.LAST_NAME);
+
+            boolean isClient = resultSet.getBoolean(Constants.User.IS_CLIENT);
+
+            return getUser(firstName, lastName, email, uuid, isClient);
+        }
+
+        return null;
+    }
+
     public AbstractUser getUserByInfo(String firstName, String lastName, String email) throws SQLException {
         String getRowSql = "SELECT * FROM " + USERS_TABLE + " WHERE "
                 + Constants.User.FIRST_NAME + "=:" + Constants.User.FIRST_NAME

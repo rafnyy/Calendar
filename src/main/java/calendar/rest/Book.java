@@ -12,10 +12,14 @@ import javax.ws.rs.core.MediaType;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Path(Constants.Api.BOOK)
 @Singleton
 public class Book {
+    private static final Logger log = Logger.getLogger(Book.class.getName());
+
     private final ScheduleDB scheduleDB;
 
     @Inject
@@ -26,17 +30,21 @@ public class Book {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void book(Booking booking) {
+        Timestamp start = new Timestamp(booking.getStartTime());
+        Timestamp end = new Timestamp(booking.getStartTime() + booking.getDurationMillis());
+
+        log.log(Level.INFO, "Booking and appointment for user {0} with consultant {1} from {2} to {3}", new Object[]{booking.getClientId(), booking.getConsultantId(), start, end});
+
         try {
             if (!scheduleDB.available(booking.getConsultantId(), booking.getStartTime(), booking.getStartTime() + booking.getDurationMillis())) {
                 //TODO: throw or some other status code
             }
 
-            scheduleDB.insertStatusChange(booking.getClientId(), booking.getConsultantId(), new Timestamp(booking.getStartTime()), Constants.Schedule.STATUS.BOOKED);
-
-            scheduleDB.insertStatusChange(booking.getClientId(), booking.getConsultantId(), new Timestamp(booking.getStartTime() + booking.getDurationMillis()), Constants.Schedule.STATUS.AVAILABLE);
+            scheduleDB.insertStatusChange(booking.getClientId(), booking.getConsultantId(), start, Constants.Schedule.STATUS.BOOKED);
+            scheduleDB.insertStatusChange(booking.getClientId(), booking.getConsultantId(), end, Constants.Schedule.STATUS.AVAILABLE);
         } catch (SQLException se) {
-            System.err.println("Threw a SQLException booking an appointment.");
-            System.err.println(se.getMessage());
+            log.log(Level.SEVERE, "Threw a SQLException booking an appointment.");
+            log.log(Level.SEVERE, se.getMessage(), se);
         }
     }
 

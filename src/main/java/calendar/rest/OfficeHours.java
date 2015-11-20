@@ -13,10 +13,15 @@ import javax.ws.rs.core.MediaType;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 @Path(Constants.Api.OFFICE_HOURS)
 @Singleton
 public class OfficeHours {
+    private static final Logger log = Logger.getLogger(OfficeHours.class.getName());
+
     private final ScheduleDB scheduleDB;
     private final UserDB userDB;
 
@@ -35,8 +40,8 @@ public class OfficeHours {
 
             scheduleDB.insertStatusChange(null, availability.getConsultantId(), new Timestamp(availability.getStartTime() + availability.getDurationMillis()), Constants.Schedule.STATUS.UNAVAILABLE);
         } catch (SQLException se) {
-            System.err.println("Threw a SQLException booking an appointment.");
-            System.err.println(se.getMessage());
+            log.log(Level.SEVERE, "Threw a SQLException setting availability.");
+            log.log(Level.SEVERE, se.getMessage(), se);
         }
     }
 
@@ -44,12 +49,16 @@ public class OfficeHours {
     @Path("/{consultantId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Schedule checkAppointments(@PathParam("consultantId") UUID consultantId, @QueryParam("startDate") long startDate, @QueryParam("endDate") long endDate) {
+        Timestamp start = new Timestamp(startDate);
+        Timestamp end = new Timestamp(endDate);
+
+        log.log(Level.INFO, "Checking appointments for consultant {0} between {1} and {2}", new Object[]{consultantId, start, end});
         try {
             Consultant consultant = userDB.getConsultant(consultantId);
-            return scheduleDB.getSchedule(consultant, new Timestamp(startDate), new Timestamp(endDate));
+            return scheduleDB.getSchedule(consultant, start, end);
         } catch (SQLException se) {
-            System.err.println("Threw a SQLException booking an appointment.");
-            System.err.println(se.getMessage());
+            log.log(Level.SEVERE, "Threw a SQLException getting a schedule.");
+            log.log(Level.SEVERE, se.getMessage(), se);
         }
 
         return null;
@@ -59,11 +68,14 @@ public class OfficeHours {
     @Path("/{consultantId}" + Constants.Api.INSTANT)
     @Produces(MediaType.APPLICATION_JSON)
     public Constants.Schedule.STATUS checkInstant(@PathParam("consultantId") UUID consultantId, @QueryParam("startDate") long startDate) {
+        Timestamp start = new Timestamp(startDate);
+        log.log(Level.INFO, "Checking appointments for consultant {0} at instant {1}", new Object[]{consultantId, start});
+
         try {
-            return scheduleDB.getStatusAtInstant(consultantId, new Timestamp(startDate));
+            return scheduleDB.getStatusAtInstant(consultantId, start);
         } catch (SQLException se) {
-            System.err.println("Threw a SQLException checking status.");
-            System.err.println(se.getMessage());
+            log.log(Level.SEVERE, "Threw a SQLException checking status.");
+            log.log(Level.SEVERE, se.getMessage(), se);
         }
 
         return null;
@@ -73,11 +85,16 @@ public class OfficeHours {
     @Path("/{consultantId}" + Constants.Api.AVAILABLE)
     @Produces(MediaType.APPLICATION_JSON)
     public boolean available(@PathParam("consultantId") UUID consultantId, @QueryParam("startDate") long startDate, @QueryParam("endDate") long endDate) {
+        Timestamp start = new Timestamp(startDate);
+        Timestamp end = new Timestamp(endDate);
+
+        log.log(Level.INFO, "Checking availability for consultant {0} between {1} and {2}", new Object[]{consultantId, start, end});
+
         try {
             return scheduleDB.available(consultantId, startDate, endDate);
         } catch (SQLException se) {
-            System.err.println("Threw a SQLException checking availability.");
-            System.err.println(se.getMessage());
+            log.log(Level.SEVERE, "Threw a SQLException checking availability.");
+            log.log(Level.SEVERE, se.getMessage(), se);
         }
 
         return false;
