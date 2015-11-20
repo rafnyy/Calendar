@@ -61,8 +61,8 @@ public class User {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public AbstractUser getUserFromInfo(@QueryParam("email") String email) {
-        log.log(Level.INFO, "Get user ID for user with email address {2}", new Object[]{email});
+    public AbstractUser getUserFromEmail(@QueryParam("email") String email) {
+        log.log(Level.INFO, "Get user ID for user with email address {0}", email);
 
         try {
             return userDB.getUserByEmail(email);
@@ -74,19 +74,33 @@ public class User {
         return null;
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public AbstractUser getUserFromInfo(@QueryParam("firstName") String firstName, @QueryParam("lastName") String lastName, @QueryParam("email") String email) {
-        log.log(Level.INFO, "Get user ID for {0} {1} with email address {2}", new Object[]{firstName, lastName, email});
+//    @GET
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public AbstractUser getUserFromInfo(@QueryParam("firstName") String firstName, @QueryParam("lastName") String lastName, @QueryParam("email") String email) {
+//        log.log(Level.INFO, "Get user ID for {0} {1} with email address {2}", new Object[]{firstName, lastName, email});
+//
+//        try {
+//            return userDB.getUserByInfo(firstName, lastName, email);
+//        } catch (SQLException se) {
+//            log.log(Level.SEVERE, "Threw a SQLException retrieving a user.");
+//            log.log(Level.SEVERE, se.getMessage(), se);
+//        }
+//
+//        return null;
+//    }
+
+    @PUT
+    @Path(Constants.Api.REGISTER)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void register(UserInfo newUser) {
+        log.log(Level.INFO, "Registering new user {0} {1} with email address {2} where client={4}", new Object[]{newUser.getFirstName(), newUser.getLastName(), newUser.getEmail(), newUser.getIsClient()});
 
         try {
-            return userDB.getUserByInfo(firstName, lastName, email);
+            userDB.registerNewClient(newUser.getFirstName(), newUser.getLastName(), newUser.getEmail());
         } catch (SQLException se) {
-            log.log(Level.SEVERE, "Threw a SQLException retrieving a user.");
+            log.log(Level.SEVERE, "Threw a SQLException registering a new user.");
             log.log(Level.SEVERE, se.getMessage(), se);
         }
-
-        return null;
     }
 
     @PUT
@@ -121,15 +135,17 @@ public class User {
         private static String firstName;
         private static String lastName;
         private static String email;
+        private static boolean isClient;
 
         public UserInfo() {
 
         }
 
-        public UserInfo(String firstName, String lastName, String email) {
-            UserInfo.firstName = firstName;
-            UserInfo.lastName = lastName;
-            UserInfo.email = email;
+        public UserInfo(String firstName, String lastName, String email, boolean isClient) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.email = email;
+            this.isClient = isClient;
         }
 
         public String getFirstName() {
@@ -137,7 +153,7 @@ public class User {
         }
 
         public void setFirstName(String firstName) {
-            UserInfo.firstName = firstName;
+            this.firstName = firstName;
         }
 
         public String getLastName() {
@@ -145,7 +161,7 @@ public class User {
         }
 
         public void setLastName(String lastName) {
-            UserInfo.lastName = lastName;
+            this.lastName = lastName;
         }
 
         public String getEmail() {
@@ -153,7 +169,15 @@ public class User {
         }
 
         public void setEmail(String email) {
-            UserInfo.email = email;
+            this.email = email;
+        }
+
+        public boolean getIsClient() {
+            return isClient;
+        }
+
+        public void setIsClient(boolean isClient) {
+            this.isClient = isClient;
         }
     }
 }

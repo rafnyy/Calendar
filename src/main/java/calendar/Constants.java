@@ -28,6 +28,7 @@ public class Constants {
         public static final String USER = ROOT + "/user";
         public static final String CONSULTANT = "/consultant";
         public static final String CLIENT = "/client";
+        public static final String REGISTER = "/register";
         public static final String REGISTER_CONSULTANT = "/register-consultant";
         public static final String REGISTER_CLIENT = "/register-client";
 

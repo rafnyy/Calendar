@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function(test) {
     $('#client-calendar').fullCalendar({
         // put your options and callbacks here
         header: {

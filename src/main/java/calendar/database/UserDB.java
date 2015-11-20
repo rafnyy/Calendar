@@ -114,7 +114,7 @@ public class UserDB {
         registerNewUser(firstName, lastName, email, false);
     }
 
-    private void registerNewUser(String firstName, String lastName, String email, boolean isClient) throws SQLException {
+    public void registerNewUser(String firstName, String lastName, String email, boolean isClient) throws SQLException {
         String insertTableSQL = "INSERT INTO " + USERS_TABLE
                 + "(" + Constants.User.FIRST_NAME + ", " + Constants.User.LAST_NAME + ", " + Constants.User.EMAIL + ", " + Constants.User.UUID_COL_NAME + ", " + Constants.User.IS_CLIENT + ") VALUES"
                 + "(:" + Constants.User.FIRST_NAME + ", :" + Constants.User.LAST_NAME + ", :" + Constants.User.EMAIL + ", :" + Constants.User.UUID_COL_NAME + ", :" + Constants.User.IS_CLIENT + ")";
@@ -127,5 +127,7 @@ public class UserDB {
         preparedStatement.setBoolean(Constants.User.IS_CLIENT, isClient);
 
         preparedStatement.executeUpdate();
+
+//        this.getUserByInfo(firstName, lastName, email)
     }
 }
