@@ -10,6 +10,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.4.0/fullcalendar.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-calendar/1.0.0/calendar.js"></script>
     <script src="js/app.js"></script>
     <script src="js/calConfig.js"></script>
     <style>
@@ -32,10 +33,6 @@
     </style>
 </head>
 <body ng-app="cal" ng-controller="calCtrl as ctrl" ng-init="init()">
-    <button class="btn btn-default" ng-click="Register()">Register</button>
-    <button class="btn btn-default" ng-click="Client()">Client</button>
-    <button class="btn btn-default" ng-click="Consultant()">Consultant</button>
-
     <div class="" ng-if="currentAction == 'home'">
         <textarea class="form-control" name="email" ng-model="input.email" placeholder="Type your Email"></textarea>
         <button class="btn btn-default" ng-click="Login(input.email)">Login</button>
@@ -52,9 +49,8 @@
         <button class="btn btn-default" ng-click="Register(input.type, input.firstName, input.lastName, input.email)">Register</button>
     </div>
 
-    <div id='client-calendar' ng-show="currentAction == 'clientCal'"></div>
+    <div  id='client-calendar' ng-show="currentAction == 'clientCal'" ui-calendar="clientConfig.calendar" ng-model="eventSources"></div>
 
-    <div id='consultant-calendar' ng-show="currentAction == 'consultantCal'"></div>
-
+    <div id='consultant-calendar' ng-show="currentAction == 'consultantCal'"ui-calendar="clientConfig.calendar" ng-model="eventSources"></div>
 </body>
 </html>
