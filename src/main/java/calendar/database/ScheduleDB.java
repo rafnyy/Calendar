@@ -3,11 +3,13 @@ package calendar.database;
 import calendar.Constants;
 import calendar.schedule.Schedule;
 import calendar.schedule.ScheduleDelta;
-import calendar.user.Consultant;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.joda.time.Instant;
+import calendar.user.Consultant;
 
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -27,22 +29,22 @@ public class ScheduleDB {
     public ScheduleDB(DatabaseConnection connection, UserDB userDB) {
         this.connection = connection;
         this.userDB = userDB;
-    }
+   }
 
     public void insertStatusChange(UUID clientId, UUID consultantId, Timestamp time, Constants.Schedule.STATUS status) throws SQLException {
         String clientColName = "";
         String clientNamedParameter = "";
-        if (status.equals(Constants.Schedule.STATUS.BOOKED)) {
+        if(status.equals(Constants.Schedule.STATUS.BOOKED)){
             clientColName = Constants.Schedule.CLIENT_ID + ", ";
             clientNamedParameter = ":" + clientColName;
         }
 
-        String insertSQL = "INSERT INTO " + SCHEDULE_TABLE
+        String insertSQL = "INSERT INTO " + SCHEDULE_TABLE + " "
                 + "(" + clientColName + Constants.Schedule.CONSULTANT_ID + ", " + Constants.Schedule.TO_STATUS + ", " + Constants.Schedule.START + ") VALUES"
-                + "(:" + clientNamedParameter + Constants.Schedule.CONSULTANT_ID + ", :" + Constants.Schedule.TO_STATUS + ", :" + Constants.Schedule.START + ")";
+                + "(" + clientNamedParameter + ":" + Constants.Schedule.CONSULTANT_ID + ", :" + Constants.Schedule.TO_STATUS + ", :" + Constants.Schedule.START + ")";
 
         NamedParameterStatement namedParameterStatement = new NamedParameterStatement(connection.getConnection(), insertSQL);
-        if (status.equals(Constants.Schedule.STATUS.BOOKED)) {
+        if(status.equals(Constants.Schedule.STATUS.BOOKED)){
             namedParameterStatement.setObject(Constants.Schedule.CLIENT_ID, clientId);
         }
         namedParameterStatement.setObject(Constants.Schedule.CONSULTANT_ID, consultantId);
@@ -103,7 +105,7 @@ public class ScheduleDB {
 
     public boolean available(UUID consultantId, long startDate, long endDate) throws SQLException {
         Consultant consultant = userDB.getConsultant(consultantId);
-        Schedule schedule = getSchedule(consultant, new Timestamp(startDate), new Timestamp(endDate));
+        Schedule schedule =  getSchedule(consultant, new Timestamp(startDate), new Timestamp(endDate));
 
         if (!schedule.getStartStatus().equals(Constants.Schedule.STATUS.AVAILABLE)) {
             return false;

@@ -4,6 +4,7 @@ import calendar.Constants;
 import calendar.database.ScheduleDB;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.codehaus.jackson.annotate.JsonCreator;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -33,7 +34,7 @@ public class Book {
         Timestamp start = new Timestamp(booking.getStartTime());
         Timestamp end = new Timestamp(booking.getStartTime() + booking.getDurationMillis());
 
-        log.log(Level.INFO, "Booking and appointment for user {0} with consultant {1} from {2} to {3}", new Object[]{booking.getClientId(), booking.getConsultantId(), start, end});
+        log.log(Level.INFO, "Booking an appointment for user {0} with consultant {1} from {2} to {3}", new Object[]{booking.getClientId(), booking.getConsultantId(), start, end});
 
         try {
             if (!scheduleDB.available(booking.getConsultantId(), booking.getStartTime(), booking.getStartTime() + booking.getDurationMillis())) {
@@ -48,17 +49,17 @@ public class Book {
         }
     }
 
-    class Booking {
+    private static class Booking {
         private UUID clientId;
         private UUID consultantId;
         private long startTime;
-        private int durationMillis;
+        private long durationMillis;
 
         public Booking() {
 
         }
 
-        public Booking(UUID clientId, UUID consultantId, long startTime, int durationMillis) {
+        public Booking(UUID clientId, UUID consultantId, long startTime, long durationMillis) {
             this.clientId = clientId;
             this.consultantId = consultantId;
             this.startTime = startTime;
@@ -89,11 +90,11 @@ public class Book {
             this.startTime = startTime;
         }
 
-        public int getDurationMillis() {
+        public long getDurationMillis() {
             return durationMillis;
         }
 
-        public void setDurationMillis(int durationMillis) {
+        public void setDurationMillis(long durationMillis) {
             this.durationMillis = durationMillis;
         }
     }

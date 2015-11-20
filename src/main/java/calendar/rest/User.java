@@ -89,7 +89,7 @@ public class User {
 //        return null;
 //    }
 
-    @PUT
+    @POST
     @Path(Constants.Api.REGISTER)
     @Consumes(MediaType.APPLICATION_JSON)
     public void register(UserInfo newUser) {
@@ -103,7 +103,7 @@ public class User {
         }
     }
 
-    @PUT
+    @POST
     @Path(Constants.Api.REGISTER_CONSULTANT)
     @Consumes(MediaType.APPLICATION_JSON)
     public void registerClient(UserInfo newUser) {
@@ -117,7 +117,7 @@ public class User {
         }
     }
 
-    @PUT
+    @POST
     @Path(Constants.Api.REGISTER_CLIENT)
     @Consumes(MediaType.APPLICATION_JSON)
     public void registerConsultant(UserInfo newUser) {

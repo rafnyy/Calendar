@@ -35,10 +35,15 @@ public class OfficeHours {
     @Path(Constants.Api.SET)
     @Consumes(MediaType.APPLICATION_JSON)
     public void set(Availability availability) {
-        try {
-            scheduleDB.insertStatusChange(null, availability.getConsultantId(), new Timestamp(availability.getStartTime()), Constants.Schedule.STATUS.AVAILABLE);
+        Timestamp start = new Timestamp(availability.getStartTime());
+        Timestamp end = new Timestamp(availability.getStartTime() + availability.getDurationMillis());
+        log.log(Level.INFO, "Setting office hours for consultant {0} between {1} and {2}", new Object[]{availability.getConsultantId(), start, end});
 
-            scheduleDB.insertStatusChange(null, availability.getConsultantId(), new Timestamp(availability.getStartTime() + availability.getDurationMillis()), Constants.Schedule.STATUS.UNAVAILABLE);
+        try {
+            scheduleDB.insertStatusChange(null, availability.getConsultantId(), start, Constants.Schedule.STATUS.AVAILABLE);
+
+            // TODO: If the instant at end if available, then this should not be inserted
+            scheduleDB.insertStatusChange(null, availability.getConsultantId(), end, Constants.Schedule.STATUS.UNAVAILABLE);
         } catch (SQLException se) {
             log.log(Level.SEVERE, "Threw a SQLException setting availability.");
             log.log(Level.SEVERE, se.getMessage(), se);
@@ -103,13 +108,13 @@ public class OfficeHours {
     private static class Availability {
         private static UUID consultantId;
         private static long startTime;
-        private static int durationMillis;
+        private static long durationMillis;
 
         public Availability() {
 
         }
 
-        public Availability(UUID consultantId, long startTime, int durationMillis) {
+        public Availability(UUID consultantId, long startTime, long durationMillis) {
             this.consultantId = consultantId;
             this.startTime = startTime;
             this.durationMillis = durationMillis;
@@ -131,11 +136,11 @@ public class OfficeHours {
             this.startTime = startTime;
         }
 
-        public int getDurationMillis() {
+        public long getDurationMillis() {
             return durationMillis;
         }
 
-        public void setDurationMillis(int durationMillis) {
+        public void setDurationMillis(long durationMillis) {
             this.durationMillis = durationMillis;
         }
     }
