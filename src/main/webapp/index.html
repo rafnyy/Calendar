@@ -14,7 +14,7 @@
             events.push({
                 title: status,
                 start: start,
-                end: currEnd,
+                end: end,
                 rendering: 'background'
             });
         }
@@ -74,7 +74,7 @@
                             prevStart = currEnd;
                         }
 
-                        addAvailable(prevStatus, prevStart, end, events);
+                        addAvailable(prevStatus, prevStart, currEnd, events);
 
                         callback(events);
                     }
