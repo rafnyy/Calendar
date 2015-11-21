@@ -7,8 +7,11 @@ import calendar.user.Consultant;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Singleton
@@ -28,6 +31,27 @@ public class UserDB {
 
     public Consultant getConsultant(UUID uuid) throws SQLException {
         return (Consultant) getUser(uuid, false);
+    }
+
+    public Set<Consultant> getAllConsultants() throws SQLException {
+        Set<Consultant> consultants = new HashSet<>();
+
+        String getRowSql = "SELECT * FROM " + USERS_TABLE + " WHERE "
+                + Constants.User.IS_CLIENT + " IS FALSE";
+
+        PreparedStatement preparedStatement = connection.getConnection().prepareStatement(getRowSql);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            String firstName = resultSet.getString(Constants.User.FIRST_NAME);
+            String lastName = resultSet.getString(Constants.User.LAST_NAME);
+            String email = resultSet.getString(Constants.User.EMAIL);
+            UUID uuid = (UUID)resultSet.getObject(Constants.User.UUID_COL_NAME);
+
+            consultants.add(new Consultant(uuid, firstName, lastName, email));
+        }
+
+        return consultants;
     }
 
     public AbstractUser getUser(UUID uuid, boolean isClient) throws SQLException {

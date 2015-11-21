@@ -11,6 +11,7 @@ import com.google.inject.Singleton;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.sql.SQLException;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,11 +21,28 @@ import java.util.logging.Logger;
 public class User {
     private static final Logger log = Logger.getLogger( User.class.getName() );
 
+
     private final UserDB userDB;
 
     @Inject
     public User(UserDB userDB) {
         this.userDB = userDB;
+    }
+
+    @GET
+    @Path(Constants.Api.CONSULTANT + Constants.Api.LIST)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Set<Consultant> getConsultants() {
+        log.log(Level.INFO, "Get all consultants");
+
+        try {
+            return userDB.getAllConsultants();
+        } catch (SQLException se) {
+            log.log(Level.SEVERE, "Threw a SQLException retrieving a consultant.");
+            log.log(Level.SEVERE, se.getMessage(), se);
+        }
+
+        return null;
     }
 
     @GET
@@ -93,10 +111,10 @@ public class User {
     @Path(Constants.Api.REGISTER)
     @Consumes(MediaType.APPLICATION_JSON)
     public void register(UserInfo newUser) {
-        log.log(Level.INFO, "Registering new user {0} {1} with email address {2} where client={4}", new Object[]{newUser.getFirstName(), newUser.getLastName(), newUser.getEmail(), newUser.getIsClient()});
+        log.log(Level.INFO, "Registering new user {0} {1} with email address {2} where client={3}", new Object[]{newUser.getFirstName(), newUser.getLastName(), newUser.getEmail(), newUser.getIsClient()});
 
         try {
-            userDB.registerNewClient(newUser.getFirstName(), newUser.getLastName(), newUser.getEmail());
+            userDB.registerNewUser(newUser.getFirstName(), newUser.getLastName(), newUser.getEmail(), newUser.getIsClient());
         } catch (SQLException se) {
             log.log(Level.SEVERE, "Threw a SQLException registering a new user.");
             log.log(Level.SEVERE, se.getMessage(), se);

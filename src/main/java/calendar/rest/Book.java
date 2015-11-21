@@ -10,6 +10,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -30,22 +31,26 @@ public class Book {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void book(Booking booking) {
+    public Response book(Booking booking) {
         Timestamp start = new Timestamp(booking.getStartTime());
         Timestamp end = new Timestamp(booking.getStartTime() + booking.getDurationMillis());
 
-        log.log(Level.INFO, "Booking an appointment for user {0} with consultant {1} from {2} to {3}", new Object[]{booking.getClientId(), booking.getConsultantId(), start, end});
-
         try {
             if (!scheduleDB.available(booking.getConsultantId(), booking.getStartTime(), booking.getStartTime() + booking.getDurationMillis())) {
-                //TODO: throw or some other status code
+                log.log(Level.INFO, "Time not available to book an appointment for user {0} with consultant {1} from {2} to {3]", new Object[]{booking.getClientId(), booking.getConsultantId(), start, end});
+                return Response.status(Response.Status.CONFLICT).build();
             }
+
+            log.log(Level.INFO, "Booking an appointment for user {0} with consultant {1} from {2} to {3}", new Object[]{booking.getClientId(), booking.getConsultantId(), start, end});
 
             scheduleDB.insertStatusChange(booking.getClientId(), booking.getConsultantId(), start, Constants.Schedule.STATUS.BOOKED);
             scheduleDB.insertStatusChange(booking.getClientId(), booking.getConsultantId(), end, Constants.Schedule.STATUS.AVAILABLE);
+
+            return Response.ok().build();
         } catch (SQLException se) {
             log.log(Level.SEVERE, "Threw a SQLException booking an appointment.");
             log.log(Level.SEVERE, se.getMessage(), se);
+            return Response.serverError().entity("Threw a SQLException booking an appointment.").build();
         }
     }
 

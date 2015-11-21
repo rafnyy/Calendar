@@ -32,7 +32,8 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
                    $('#client-calendar').fullCalendar('renderEvent', eventData, true); // stick? = true
                    $('#client-calendar').fullCalendar('unselect');
                 }).error(function (data, status, headers, config) {
-
+                    alert("This slot is not available to book an appointment")
+                    ('#client-calendar').fullCalendar('unselect');
                 });
 
         },
@@ -133,6 +134,10 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
         $scope.currentAction = "home";
     }
 
+    $scope.SelectConsultant = function(uuid) {
+        $scope.consultantId = uuid;
+    }
+
     $scope.Login = function(email) {
         $http({
             method: 'GET',
@@ -156,9 +161,9 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
 
     $scope.Register = function(type, firstName, lastName, email) {
            if($scope.type == "client") {
-                isClient = "true"
+                isClient = true;
            } else {
-                isClient = "false";
+                isClient = false;
            }
         $http({
             method: 'POST',
@@ -176,7 +181,30 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
             $scope.currentAction = "register";
         });
     };
+
+     $scope.ListConsultants = function() {
+        //get a reference to the select element
+        $select = $('#consultants');
+        //request the JSON data and parse into the select element
+        $http({
+          url: 'http://localhost:8080/api/user/consultant/list',
+          headers: {'Content-Type':'application/json'},
+          }).success(function(data){
+            //clear the current content of the select
+            $select.html('');
+            //iterate over the data and append a select option
+            $.each(data, function(key, val){
+              $select.append('<option id="' + val.uuid + '">' + val.firstName + '</option>');
+            })
+
+          }).error(function(){
+            //if there is an error append a 'none available' option
+            $select.html('<option id="-1">none available</option>');
+          });
+    }
 }]);
+
+
 
 function addAvailable(status, start, end, events) {
    if (status == 'AVAILABLE') {

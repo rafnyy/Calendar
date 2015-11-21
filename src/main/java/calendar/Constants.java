@@ -27,6 +27,7 @@ public class Constants {
         // User
         public static final String USER = ROOT + "/user";
         public static final String CONSULTANT = "/consultant";
+        public static final String LIST = "/list";
         public static final String CLIENT = "/client";
         public static final String REGISTER = "/register";
         public static final String REGISTER_CONSULTANT = "/register-consultant";
@@ -35,7 +36,9 @@ public class Constants {
         //OfficeHours
         public static final String OFFICE_HOURS = ROOT + "/office-hours";
         public static final String SET = "/set";
+        public static final String UNSET = "/unset";
         public static final String INSTANT = "/instant";
-        public static final String AVAILABLE = "available";
+        public static final String AVAILABLE = "/available";
+        public static final String UNBOOKED = "/unbooked";
     }
 }

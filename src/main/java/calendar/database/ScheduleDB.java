@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -113,6 +114,25 @@ public class ScheduleDB {
 
         if (schedule.getDeltas().size() > 0) {
             return false;
+        }
+
+        return true;
+    }
+
+    public boolean unbooked(UUID consultantId, long startDate, long endDate) throws SQLException {
+        Consultant consultant = userDB.getConsultant(consultantId);
+        Schedule schedule =  getSchedule(consultant, new Timestamp(startDate), new Timestamp(endDate));
+
+        if (schedule.getStartStatus().equals(Constants.Schedule.STATUS.BOOKED)) {
+            return false;
+        }
+
+        Iterator<ScheduleDelta> iterator = schedule.getDeltas().iterator();
+
+        while(iterator.hasNext()) {
+            if(iterator.next().getToStatus().equals(Constants.Schedule.STATUS.BOOKED)) {
+                return false;
+            }
         }
 
         return true;

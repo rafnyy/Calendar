@@ -42,8 +42,29 @@ public class OfficeHours {
         try {
             scheduleDB.insertStatusChange(null, availability.getConsultantId(), start, Constants.Schedule.STATUS.AVAILABLE);
 
-            // TODO: If the instant at end if available, then this should not be inserted
-            scheduleDB.insertStatusChange(null, availability.getConsultantId(), end, Constants.Schedule.STATUS.UNAVAILABLE);
+            if(!scheduleDB.getStatusAtInstant(availability.getConsultantId(), end).equals(Constants.Schedule.STATUS.AVAILABLE)) {
+                scheduleDB.insertStatusChange(null, availability.getConsultantId(), end, Constants.Schedule.STATUS.UNAVAILABLE);
+            }
+        } catch (SQLException se) {
+            log.log(Level.SEVERE, "Threw a SQLException setting availability.");
+            log.log(Level.SEVERE, se.getMessage(), se);
+        }
+    }
+
+    @POST
+    @Path(Constants.Api.UNSET)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void unset(Availability availability) {
+        Timestamp start = new Timestamp(availability.getStartTime());
+        Timestamp end = new Timestamp(availability.getStartTime() + availability.getDurationMillis());
+        log.log(Level.INFO, "Unsetting office hours for consultant {0} between {1} and {2}", new Object[]{availability.getConsultantId(), start, end});
+
+        try {
+            scheduleDB.insertStatusChange(null, availability.getConsultantId(), start, Constants.Schedule.STATUS.UNAVAILABLE);
+
+            if(!scheduleDB.getStatusAtInstant(availability.getConsultantId(), end).equals(Constants.Schedule.STATUS.UNAVAILABLE)) {
+                scheduleDB.insertStatusChange(null, availability.getConsultantId(), end, Constants.Schedule.STATUS.AVAILABLE);
+            }
         } catch (SQLException se) {
             log.log(Level.SEVERE, "Threw a SQLException setting availability.");
             log.log(Level.SEVERE, se.getMessage(), se);
@@ -97,6 +118,25 @@ public class OfficeHours {
 
         try {
             return scheduleDB.available(consultantId, startDate, endDate);
+        } catch (SQLException se) {
+            log.log(Level.SEVERE, "Threw a SQLException checking availability.");
+            log.log(Level.SEVERE, se.getMessage(), se);
+        }
+
+        return false;
+    }
+
+    @GET
+    @Path("/{consultantId}" + Constants.Api.UNBOOKED)
+    @Produces(MediaType.APPLICATION_JSON)
+    public boolean unbooked(@PathParam("consultantId") UUID consultantId, @QueryParam("startDate") long startDate, @QueryParam("endDate") long endDate) {
+        Timestamp start = new Timestamp(startDate);
+        Timestamp end = new Timestamp(endDate);
+
+        log.log(Level.INFO, "Checking availability for consultant {0} between {1} and {2}", new Object[]{consultantId, start, end});
+
+        try {
+            return scheduleDB.unbooked(consultantId, startDate, endDate);
         } catch (SQLException se) {
             log.log(Level.SEVERE, "Threw a SQLException checking availability.");
             log.log(Level.SEVERE, se.getMessage(), se);
