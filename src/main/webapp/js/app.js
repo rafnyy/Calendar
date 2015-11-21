@@ -149,7 +149,6 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
             } else if(data.client) {
                 $scope.currentAction = "clientCal";
                 $scope.clientId = data.uuid;
-                $scope.consultantId = "5c8d95d1-3ef4-4bdd-85ca-267bb6cd380d";
            } else {
                $scope.currentAction = "consultantCal";
                $scope.consultantId = data.uuid;

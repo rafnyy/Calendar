@@ -4,6 +4,7 @@ import calendar.Constants;
 import calendar.database.ScheduleDB;
 import calendar.database.UserDB;
 import calendar.schedule.Schedule;
+import calendar.schedule.ScheduleDelta;
 import calendar.user.Consultant;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -12,10 +13,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Iterator;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 
 @Path(Constants.Api.OFFICE_HOURS)
 @Singleton
@@ -42,6 +43,16 @@ public class OfficeHours {
         try {
             scheduleDB.insertStatusChange(null, availability.getConsultantId(), start, Constants.Schedule.STATUS.AVAILABLE);
 
+            Schedule schedule = scheduleDB.getSchedule(userDB.getConsultant(availability.getConsultantId()), start, end);
+
+            Iterator<ScheduleDelta> iterator = schedule.getDeltas().iterator();
+            while(iterator.hasNext()) {
+                ScheduleDelta delta = iterator.next();
+                if(delta.equals(Constants.Schedule.STATUS.UNAVAILABLE)) {
+                    delete(availability.getConsultantId(), delta.getTime().getMillis());
+                }
+            }
+
             if(!scheduleDB.getStatusAtInstant(availability.getConsultantId(), end).equals(Constants.Schedule.STATUS.AVAILABLE)) {
                 scheduleDB.insertStatusChange(null, availability.getConsultantId(), end, Constants.Schedule.STATUS.UNAVAILABLE);
             }
@@ -67,6 +78,21 @@ public class OfficeHours {
             }
         } catch (SQLException se) {
             log.log(Level.SEVERE, "Threw a SQLException setting availability.");
+            log.log(Level.SEVERE, se.getMessage(), se);
+        }
+    }
+
+    @DELETE
+    @Path("/delete")
+    public void delete(@PathParam("consultantId") UUID consultantId, @QueryParam("startDate") long startDate) {
+        Timestamp start = new Timestamp(startDate);
+
+        log.log(Level.INFO, "Deleting schedule delta for consultant {0} at {1}", new Object[]{consultantId, start});
+
+        try {
+            scheduleDB.delete(consultantId, start);
+        } catch (SQLException se) {
+            log.log(Level.SEVERE, "Threw a SQLException deleting a schedule delta.");
             log.log(Level.SEVERE, se.getMessage(), se);
         }
     }

@@ -31,13 +31,8 @@
         <button class="btn btn-default" ng-click="Register(input.type, input.firstName, input.lastName, input.email)">Register</button>
     </div>
 
-    <!--<div class="" ng-show="currentAction == 'clientCal'">-->
-        <!--<select id="consultants" ng-click="ListConsultants()" ng-model="consultantId"/>-->
-    <!--</div>-->
-
-    <div id='client-calendar' ng-show="currentAction == 'clientCal'" ui-calendar="clientConfig.calendar">
-        <select id="consultants" ng-click="ListConsultants()" ng-model="consultantId"/>
-    </div>
+    <select id="consultants" ng-show="currentAction == 'clientCal'" ng-click="ListConsultants()" ng-model="consultantId"></select>
+    <div id='client-calendar' ng-show="currentAction == 'clientCal'" ui-calendar="clientConfig.calendar"></div>
 
     <div id='consultant-calendar' ng-show="currentAction == 'consultantCal'" ui-calendar="consultantConfig.calendar"></div>
 </body>

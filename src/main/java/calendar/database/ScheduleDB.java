@@ -137,4 +137,17 @@ public class ScheduleDB {
 
         return true;
     }
+
+    public void delete(UUID consultantId, Timestamp start) throws SQLException {
+        String deleteSQL = "DELETE FROM " + SCHEDULE_TABLE + " WHERE "
+                + Constants.Schedule.CONSULTANT_ID + "=:" + Constants.Schedule.CONSULTANT_ID +
+                " AND " + Constants.Schedule.START + "=:" + Constants.Schedule.START;
+
+        NamedParameterStatement namedParameterStatement = new NamedParameterStatement(connection.getConnection(), deleteSQL);
+
+        namedParameterStatement.setObject(Constants.Schedule.CONSULTANT_ID, consultantId);
+        namedParameterStatement.setTimestamp(Constants.Schedule.START, start);
+
+        namedParameterStatement.executeUpdate();
+    }
 }
