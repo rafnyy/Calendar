@@ -37,35 +37,38 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
                    }, function errorCallback(response) {
                         alert("This slot is not available to book an appointment");
                         ('#client-calendar').fullCalendar('unselect');
+                }, function errorCallback(response) {
+
                 });
 
         },
         editable: true,
         eventLimit: true,
         events: function(start, end, timezone, callback) {
-            $.ajax({
+            $http({
+                method: 'GET',
                 url: 'http://localhost:8080/api/office-hours/' + $scope.consultantId + '?startDate=' + start.unix() + '000&endDate=' + end.unix() + '000',
-                type: 'GET',
-                success: function(data) {
+            }).then(function successCallback(response) {
                     var events = [];
 
-                    var prevStatus = data.startStatus;
+                    var prevStatus = response.data.startStatus;
                     var prevStart = start;
 
-                    for (var i = 0; i < data.deltas.length; i++) {
-                        var currEnd = $.fullCalendar.moment(data.deltas[i].time.millis);
+                    for (var i = 0; i < response.data.deltas.length; i++) {
+                        var currEnd = $.fullCalendar.moment(response.data.deltas[i].time.millis);
 
                         addAvailable(prevStatus, prevStart, currEnd, events);
 
-                        prevStatus = data.deltas[i].toStatus;
+                        prevStatus = response.data.deltas[i].toStatus;
                         prevStart = currEnd;
                     }
 
                     addAvailable(prevStatus, prevStart, currEnd, events);
 
                     callback(events);
-                }
-            });
+           }, function errorCallback(response) {
+                    
+           });
         }
       }
     };
@@ -87,7 +90,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
                         url: 'http://localhost:8080/api/office-hours/set',
                         headers: {'Content-Type':'application/json'},
                         data: { "consultantId": $scope.consultantId, "startTime": start.unix() * 1000, "durationMillis": durationMillis }
-                    }).then(function successCallback(response) {
+                }).then(function successCallback(response) {
                            var eventData = {
                                title: 'AVAILABLE',
                                rendering: 'background',
@@ -97,28 +100,29 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
 
                            $('#consultant-calendar').fullCalendar('renderEvent', eventData, true); // stick? = true
                            $('#consultant-calendar').fullCalendar('unselect');
-                        }, function errorCallback(response) {
-                    });
+                }, function errorCallback(response) {
+
+                });
             },
             editable: true,
             eventLimit: true,
             events: function(start, end, timezone, callback) {
-                $.ajax({
+                $http({
+                    method: 'GET',
                     url: 'http://localhost:8080/api/office-hours/' + $scope.consultantId + '?startDate=' + start.unix() + '000&endDate=' + end.unix() + '000',
-                    type: 'GET',
-                    success: function(data) {
+                }).then(function successCallback(response) {
                         var events = [];
 
-                        var prevStatus = data.startStatus;
+                        var prevStatus = response.data.startStatus;
                         var prevStart = start;
 
-                        for (var i = 0; i < data.deltas.length; i++) {
-                            var currEnd = $.fullCalendar.moment(data.deltas[i].time.millis);
+                        for (var i = 0; i < response.data.deltas.length; i++) {
+                            var currEnd = $.fullCalendar.moment(response.data.deltas[i].time.millis);
 
                             addAvailable(prevStatus, prevStart, currEnd, events);
                             addBooked(prevStatus, prevStart, currEnd, events);
 
-                            prevStatus = data.deltas[i].toStatus;
+                            prevStatus = response.data.deltas[i].toStatus;
                             prevStart = currEnd;
                         }
 
@@ -126,7 +130,8 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
                         addBooked(prevStatus, prevStart, end, events);
 
                         callback(events);
-                    }
+                }, function errorCallback(response) {
+                    
                 });
             }
       }
@@ -145,9 +150,9 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
                 $.each(response.data, function(key, val){
                   $select.append('<option value="' + val.uuid + '">' + val.firstName + '</option>');
                 })
-             }, function errorCallback(response) {
+         }, function errorCallback(response) {
                 $select.html('<option value="-1">none available</option>');
-        });
+         });
     }
 
      $scope.SelectConsultant = function() {
@@ -170,9 +175,9 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
                $scope.currentAction = "consultantCal";
                $scope.consultantId = response.data.uuid;
            }
-        }).error(function (response) {
+       }, function errorCallback(response) {
             $scope.currentAction = "register";
-        });
+       });
     };
 
     $scope.Register = function(type, firstName, lastName, email) {
@@ -192,7 +197,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
            } else {
                $scope.currentAction = "consultantCal";
            }
-        }).error(function (response) {
+        }, function errorCallback(response) {
             alert("Could not register with that information. Please try again.")
             $scope.currentAction = "register";
         });
