@@ -1,7 +1,10 @@
 # Calendar
 
 TODO list
-* bug fixes, need to click back and forth to get calendar to load events
+* bug fixes
+** need to click back and forth to get calendar to load events
+** setting office hours doesn't seem to set it back to UNABVAILABLE at the end
+** Uncaught TypeError: Cannot read property 'clone' of null
 * email address must be unique since it acts as log in
 * consultant calendar needs client information on bookings
 * client should have phone number
