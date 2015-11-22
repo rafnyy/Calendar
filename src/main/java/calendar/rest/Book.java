@@ -37,7 +37,7 @@ public class Book {
 
         try {
             if (!scheduleDB.available(booking.getConsultantId(), booking.getStartTime(), booking.getStartTime() + booking.getDurationMillis())) {
-                log.log(Level.INFO, "Time not available to book an appointment for user {0} with consultant {1} from {2} to {3]", new Object[]{booking.getClientId(), booking.getConsultantId(), start, end});
+                log.log(Level.INFO, "Time not available to book an appointment for user {0} with consultant {1} from {2} to {3}", new Object[]{booking.getClientId(), booking.getConsultantId(), start, end});
                 return Response.status(Response.Status.CONFLICT).build();
             }
 
