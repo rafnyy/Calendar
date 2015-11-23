@@ -27,7 +27,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
                     method: 'POST',
                     url: 'http://localhost:8080/api/book',
                     headers: {'Content-Type':'application/json'},
-                    data: { "clientId": $scope.clientId, "consultantId": $scope.consultantId, "startTime": start.unix() * 1000, "durationMillis": durationMillis }
+                    data: { "clientId": $scope.clientId, "consultantId": $scope.consultantId, "startTime": start.valueOf(), "durationMillis": durationMillis }
                 }).then(function successCallback(response) {
                        var eventData = {
                            title: 'BOOKING',
@@ -50,7 +50,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
         events: function(start, end, timezone, callback) {
             $http({
                 method: 'GET',
-                url: 'http://localhost:8080/api/office-hours/' + $scope.consultantId + '?startDate=' + start.unix() + '000&endDate=' + end.unix() + '000',
+                url: 'http://localhost:8080/api/office-hours/' + $scope.consultantId + '?startDate=' + start.valueOf() + '&endDate=' + end.valueOf(),
             }).then(function successCallback(response) {
                     var events = [];
 
@@ -95,7 +95,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
                         method: 'POST',
                         url: 'http://localhost:8080/api/office-hours/set',
                         headers: {'Content-Type':'application/json'},
-                        data: { "consultantId": $scope.consultantId, "startTime": start.unix() * 1000, "durationMillis": durationMillis }
+                        data: { "consultantId": $scope.consultantId, "startTime": start.valueOf(), "durationMillis": durationMillis }
                 }).then(function successCallback(response) {
                            var eventData = {
                                title: 'AVAILABLE',
@@ -115,7 +115,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
             events: function(start, end, timezone, callback) {
                 $http({
                     method: 'GET',
-                    url: 'http://localhost:8080/api/office-hours/' + $scope.consultantId + '?startDate=' + start.unix() + '000&endDate=' + end.unix() + '000',
+                    url: 'http://localhost:8080/api/office-hours/' + $scope.consultantId + '?startDate=' + start.valueOf() + '&endDate=' + end.valueOf(),
                 }).then(function successCallback(response) {
                         var events = [];
 
