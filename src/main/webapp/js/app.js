@@ -16,6 +16,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
             center: 'title',
             right: 'agendaWeek,agendaDay'
         },
+        allDaySlot: false,
         selectable: true,
         selectHelper: true,
         select: function(start, end) {
@@ -81,6 +82,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
                 center: 'title',
                 right: 'agendaWeek,agendaDay'
             },
+            allDaySlot: false,
             selectable: true,
             selectHelper: true,
             select: function(start, end) {
