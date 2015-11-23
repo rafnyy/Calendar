@@ -37,7 +37,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
                        $('#client-calendar').fullCalendar('unselect');
                    }, function errorCallback(response) {
                         alert("This slot is not available to book an appointment");
-                        ('#client-calendar').fullCalendar('unselect');
+                        $('#client-calendar').fullCalendar('unselect');
                 }, function errorCallback(response) {
 
                 });
@@ -158,8 +158,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
     }
 
      $scope.SelectConsultant = function() {
-        ('#client-calendar').fullCalendar('refetchEvents');
-        ('#client-calendar').fullCalendar('rerenderEvents');
+        $('#client-calendar').fullCalendar('refetchEvents');
      }
 
     $scope.Login = function(email) {
