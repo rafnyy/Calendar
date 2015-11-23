@@ -152,7 +152,8 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
           url: 'http://localhost:8080/api/user/consultant/list',
           headers: {'Content-Type':'application/json'},
          }).then(function successCallback(response) {
-                $select.html('');
+                $select.html('<option value="-1"></option>');
+
                 $.each(response.data, function(key, val){
                   $select.append('<option value="' + val.uuid + '">' + val.firstName + '</option>');
                 })
@@ -179,6 +180,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
            } else {
                $scope.currentAction = "consultantCal";
                $scope.consultantId = response.data.uuid;
+               $('#consultant-calendar').fullCalendar('refetchEvents');
            }
        }, function errorCallback(response) {
             $scope.currentAction = "register";
@@ -201,6 +203,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
                $scope.currentAction = "clientCal";
            } else {
                $scope.currentAction = "consultantCal";
+               $('#consultant-calendar').fullCalendar('refetchEvents');
            }
         }, function errorCallback(response) {
             alert("Could not register with that information. Please try again.")

@@ -11,7 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public abstract class RestTest {
+public abstract class RestFunctionalTest {
     protected final HttpClient client = HttpClientBuilder.create().build();
 
     @Before

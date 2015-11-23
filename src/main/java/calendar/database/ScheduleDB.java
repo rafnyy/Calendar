@@ -33,6 +33,8 @@ public class ScheduleDB {
    }
 
     public void insertStatusChange(UUID clientId, UUID consultantId, Timestamp time, Constants.Schedule.STATUS status) throws SQLException {
+        delete(consultantId, time);
+
         String clientColName = "";
         String clientNamedParameter = "";
         if(status.equals(Constants.Schedule.STATUS.BOOKED)){
@@ -88,7 +90,7 @@ public class ScheduleDB {
 
         String getRowSQL = "SELECT " + Constants.Schedule.TO_STATUS + " FROM " + SCHEDULE_TABLE + " WHERE "
                 + Constants.Schedule.CONSULTANT_ID + "=:" + Constants.Schedule.CONSULTANT_ID +
-                " AND " + Constants.Schedule.START + "<:" + Constants.Schedule.START
+                " AND " + Constants.Schedule.START + "<=:" + Constants.Schedule.START
                 + " ORDER BY " + Constants.Schedule.START + " DESC";
 
         NamedParameterStatement preparedStatement = new NamedParameterStatement(connection.getConnection(), getRowSQL);
@@ -106,14 +108,18 @@ public class ScheduleDB {
 
     public boolean available(UUID consultantId, long startDate, long endDate) throws SQLException {
         Consultant consultant = userDB.getConsultant(consultantId);
-        Schedule schedule =  getSchedule(consultant, new Timestamp(startDate), new Timestamp(endDate));
+        Schedule schedule = getSchedule(consultant, new Timestamp(startDate), new Timestamp(endDate));
 
         if (!schedule.getStartStatus().equals(Constants.Schedule.STATUS.AVAILABLE)) {
             return false;
         }
 
-        if (schedule.getDeltas().size() > 0) {
-            return false;
+        Iterator<ScheduleDelta> iterator = schedule.getDeltas().iterator();
+
+        while(iterator.hasNext()) {
+            if(!iterator.next().getToStatus().equals(Constants.Schedule.STATUS.AVAILABLE)) {
+                return false;
+            }
         }
 
         return true;

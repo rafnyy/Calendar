@@ -33,7 +33,7 @@ public class Book {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response book(Booking booking) {
         Timestamp start = new Timestamp(booking.getStartTime());
-        Timestamp end = new Timestamp(booking.getStartTime() + booking.getDurationMillis());
+        Timestamp end = new Timestamp(booking.getStartTime() + booking.getDurationMillis() - 1);
 
         try {
             if (!scheduleDB.available(booking.getConsultantId(), booking.getStartTime(), booking.getStartTime() + booking.getDurationMillis())) {
