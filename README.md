@@ -1,6 +1,7 @@
 # Calendar
 
 TODO list
+* events seem to register in the wrong place on the calendar, they act correctly accoridng to the DB though (timezone issue?)
 * need to click back and forth to get calendar to load events
 * Need to return and set clientId or consultantId after registering new user so we can load calendar
 * Uncaught TypeError: Cannot read property 'clone' of null
