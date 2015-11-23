@@ -5,12 +5,15 @@ body {
     font-size: 14px;
 }
 
-#client-calendar {
+div {
     max-width: 900px;
     margin: 0 auto;
 }
 
+#client-calendar {
+
+}
+
 #consultant-calendar {
-    max-width: 900px;
-    margin: 0 auto;
+
 }
