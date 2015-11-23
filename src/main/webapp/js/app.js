@@ -12,11 +12,13 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
       calendar:{
         // put your options and callbacks here
         header: {
-            left: 'prev,next',
+            left: 'prev,next today',
             center: 'title',
             right: 'agendaWeek,agendaDay'
         },
         allDaySlot: false,
+        defaultView: 'agendaWeek',
+        theme: true,
         selectable: true,
         selectHelper: true,
         select: function(start, end) {
@@ -78,11 +80,13 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
       calendar:{
             // put your options and callbacks here
             header: {
-                left: 'prev,next',
+                left: 'prev,next today',
                 center: 'title',
                 right: 'agendaWeek,agendaDay'
             },
             allDaySlot: false,
+            theme: true,
+            defaultView: 'agendaDay',
             selectable: true,
             selectHelper: true,
             select: function(start, end) {
