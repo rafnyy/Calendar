@@ -41,6 +41,8 @@ public class OfficeHours {
         log.log(Level.INFO, "Setting office hours for consultant {0} between {1} and {2}", new Object[]{availability.getConsultantId(), start, end});
 
         try {
+            boolean availableAtEnd = scheduleDB.getStatusAtInstant(availability.getConsultantId(), end).equals(Constants.Schedule.STATUS.AVAILABLE);
+
             scheduleDB.insertStatusChange(null, availability.getConsultantId(), start, Constants.Schedule.STATUS.AVAILABLE);
 
             Schedule schedule = scheduleDB.getSchedule(userDB.getConsultant(availability.getConsultantId()), start, end);
@@ -48,12 +50,12 @@ public class OfficeHours {
             Iterator<ScheduleDelta> iterator = schedule.getDeltas().iterator();
             while(iterator.hasNext()) {
                 ScheduleDelta delta = iterator.next();
-                if(delta.equals(Constants.Schedule.STATUS.UNAVAILABLE)) {
+                if(delta.getToStatus().equals(Constants.Schedule.STATUS.UNAVAILABLE)) {
                     delete(availability.getConsultantId(), delta.getTime().getMillis());
                 }
             }
 
-            if(!scheduleDB.getStatusAtInstant(availability.getConsultantId(), end).equals(Constants.Schedule.STATUS.AVAILABLE)) {
+            if(!availableAtEnd) {
                 scheduleDB.insertStatusChange(null, availability.getConsultantId(), end, Constants.Schedule.STATUS.UNAVAILABLE);
             }
         } catch (SQLException se) {
