@@ -2,7 +2,7 @@
 
 TODO list
 * need to click back and forth to get calendar to load events
-* setting office hours doesn't seem to set it back to UNABVAILABLE at the end
+* Need to return and set clientId or consultantId after registering new user so we can load calendar
 * Uncaught TypeError: Cannot read property 'clone' of null
 * email address must be unique since it acts as log in
 * client calendar should be able to see own bookings
