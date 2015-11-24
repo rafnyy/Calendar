@@ -5,6 +5,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
     $scope.clientId = "";
     $scope.consultantId = "";
 
+    $scope.regional = "";
     $scope.events = [];
     $scope.eventSources = [$scope.events];
 
