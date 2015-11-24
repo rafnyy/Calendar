@@ -45,6 +45,7 @@ Written in AngularJS, the UI utilizies an open source package called fullcalenda
 
 # TODO list
 * events seem to register in the wrong place on the calendar, they act correctly accoridng to the DB though (timezone issue?) fullcalendar is supposed to handle this and the API only deals with milliseconds from the epoch
+* setting avaialble start at the same time as an existing booking deletes the booking
 * need to click back and forth to get calendar to load events
 * Need to return and set clientId or consultantId after registering new user so we can load calendar
 * Uncaught TypeError: Cannot read property 'clone' of null
