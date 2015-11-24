@@ -43,7 +43,9 @@ public class OfficeHours {
         try {
             boolean availableAtEnd = scheduleDB.getStatusAtInstant(availability.getConsultantId(), end).equals(Constants.Schedule.STATUS.AVAILABLE);
 
-            scheduleDB.insertStatusChange(null, availability.getConsultantId(), start, Constants.Schedule.STATUS.AVAILABLE);
+            if(!scheduleDB.getStatusAtInstant(availability.getConsultantId(), start).equals(Constants.Schedule.STATUS.BOOKED)) {
+                scheduleDB.insertStatusChange(null, availability.getConsultantId(), start, Constants.Schedule.STATUS.AVAILABLE);
+            }
 
             Schedule schedule = scheduleDB.getSchedule(userDB.getConsultant(availability.getConsultantId()), start, end);
 
