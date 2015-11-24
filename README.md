@@ -44,8 +44,6 @@ The REST calls take most 2 main things to perform all operations. uuids and long
 Written in AngularJS, the UI utilizies an open source package called fullcalendar http://fullcalendar.io/ and it's Angular wrapper https://github.com/angular-ui/ui-calendar. The UI only interacts with the persistant data in the database through the REST API.
 
 # TODO list
-* setting avaialble start at the same time as an existing booking deletes the booking
-* need to click back and forth to get calendar to load events
 * Need to return and set clientId or consultantId after registering new user so we can load calendar
 * Uncaught TypeError: Cannot read property 'clone' of null
 * client calendar should be able to see own bookings
