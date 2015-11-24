@@ -3,13 +3,10 @@ package calendar.database;
 import calendar.Constants;
 import calendar.schedule.Schedule;
 import calendar.schedule.ScheduleDelta;
+import calendar.user.Consultant;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.joda.time.Instant;
-import calendar.user.Consultant;
 
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -76,13 +73,13 @@ public class ScheduleDB {
 
         while (resultSet.next()) {
             Timestamp time = resultSet.getTimestamp(Constants.Schedule.START);
-            Instant start = new Instant(time.getTime());
+
             Constants.Schedule.STATUS status = Constants.Schedule.STATUS.valueOf(resultSet.getString(Constants.Schedule.TO_STATUS));
 
-            deltas.add(new ScheduleDelta(start, status));
+            deltas.add(new ScheduleDelta(time, status));
         }
 
-        return new Schedule(consultant, new Instant(startTime.getTime()), new Instant(endTime.getTime()), deltas, startStatus);
+        return new Schedule(consultant, startTime, endTime, deltas, startStatus);
     }
 
     public Constants.Schedule.STATUS getStatusAtInstant(UUID consultantId, Timestamp time) throws SQLException {

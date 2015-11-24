@@ -1,22 +1,23 @@
 package calendar.schedule;
 
 import calendar.Constants;
-import org.joda.time.Instant;
+
+import java.sql.Timestamp;
 
 public class ScheduleDelta {
-    private Instant time;
+    private Timestamp time;
     private Constants.Schedule.STATUS toStatus;
 
-    public ScheduleDelta(Instant time, Constants.Schedule.STATUS toStatus) {
+    public ScheduleDelta(Timestamp time, Constants.Schedule.STATUS toStatus) {
         this.time = time;
         this.toStatus = toStatus;
     }
 
-    public Instant getTime() {
+    public Timestamp getTime() {
         return time;
     }
 
-    public void setTime(Instant time) {
+    public void setTime(Timestamp time) {
         this.time = time;
     }
 

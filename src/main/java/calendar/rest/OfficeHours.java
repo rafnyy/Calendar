@@ -51,7 +51,7 @@ public class OfficeHours {
             while(iterator.hasNext()) {
                 ScheduleDelta delta = iterator.next();
                 if(delta.getToStatus().equals(Constants.Schedule.STATUS.UNAVAILABLE)) {
-                    delete(availability.getConsultantId(), delta.getTime().getMillis());
+                    delete(availability.getConsultantId(), delta.getTime().getTime());
                 }
             }
 

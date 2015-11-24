@@ -47,6 +47,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
         },
         editable: true,
         eventLimit: true,
+        timezone: 'UTC',
         events: function(start, end, timezone, callback) {
             $http({
                 method: 'GET',
@@ -58,7 +59,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
                     var prevStart = start;
 
                     for (var i = 0; i < response.data.deltas.length; i++) {
-                        var currEnd = $.fullCalendar.moment(response.data.deltas[i].time.millis);
+                        var currEnd = $.fullCalendar.moment(response.data.deltas[i].time);
 
                         addAvailable(prevStatus, prevStart, currEnd, events);
 
@@ -112,6 +113,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
             },
             editable: true,
             eventLimit: true,
+            timezone: 'UTC',
             events: function(start, end, timezone, callback) {
                 $http({
                     method: 'GET',
@@ -123,7 +125,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
                         var prevStart = start;
 
                         for (var i = 0; i < response.data.deltas.length; i++) {
-                            var currEnd = $.fullCalendar.moment(response.data.deltas[i].time.millis);
+                            var currEnd = $.fullCalendar.moment(response.data.deltas[i].time);
 
                             addAvailable(prevStatus, prevStart, currEnd, events);
                             addBooked(prevStatus, prevStart, currEnd, events);

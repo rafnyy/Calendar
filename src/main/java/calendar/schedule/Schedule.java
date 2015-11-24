@@ -2,19 +2,19 @@ package calendar.schedule;
 
 import calendar.Constants;
 import calendar.user.Consultant;
-import org.joda.time.Instant;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public class Schedule {
     private Consultant consultant;
-    private Instant startDate;
-    private Instant endDate;
+    private Timestamp startDate;
+    private Timestamp endDate;
 
     private List<ScheduleDelta> deltas;
     private Constants.Schedule.STATUS startStatus;
 
-    public Schedule(Consultant consultant, Instant startDate, Instant endDate, List<ScheduleDelta> deltas, Constants.Schedule.STATUS startStatus) {
+    public Schedule(Consultant consultant, Timestamp startDate, Timestamp endDate, List<ScheduleDelta> deltas, Constants.Schedule.STATUS startStatus) {
         this.consultant = consultant;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -26,11 +26,11 @@ public class Schedule {
         return consultant;
     }
 
-    public Instant getStartDate() {
+    public Timestamp getStartDate() {
         return startDate;
     }
 
-    public Instant getEndDate() {
+    public Timestamp getEndDate() {
         return endDate;
     }
 
