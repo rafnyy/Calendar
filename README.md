@@ -1,6 +1,6 @@
 # Calendar
 
-This calendar has three layers. UI, API, and DB.
+This calendar has three layers. UI, API, and DB. The design principle was the put something together that not only accomplishes the basic goals of the calendar (booking appointments and setting office hours) but also allows for easy addition or replacement of features. I wanted future API and DB schema changes to be additive. I also wanted to be able to replace pieces of technology if required. For eaxmple, switching from Postgres to any other database technology should be fairly painless. Only files in the database directory need to be changed. If it is a SQL based solution, only configuration details need to be changed.
 
 #Database
 The database is two simple Postgres databases. 
