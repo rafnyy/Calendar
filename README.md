@@ -44,7 +44,6 @@ The REST calls take most 2 main things to perform all operations. uuids and long
 Written in AngularJS, the UI utilizies an open source package called fullcalendar http://fullcalendar.io/ and it's Angular wrapper https://github.com/angular-ui/ui-calendar. The UI only interacts with the persistant data in the database through the REST API.
 
 # TODO list
-* events seem to register in the wrong place on the calendar, they act correctly accoridng to the DB though (timezone issue?) fullcalendar is supposed to handle this and the API only deals with milliseconds from the epoch
 * setting avaialble start at the same time as an existing booking deletes the booking
 * need to click back and forth to get calendar to load events
 * Need to return and set clientId or consultantId after registering new user so we can load calendar
