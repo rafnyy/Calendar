@@ -48,7 +48,6 @@ Written in AngularJS, the UI utilizies an open source package called fullcalenda
 * need to click back and forth to get calendar to load events
 * Need to return and set clientId or consultantId after registering new user so we can load calendar
 * Uncaught TypeError: Cannot read property 'clone' of null
-* email address must be unique since it acts as log in
 * client calendar should be able to see own bookings
 * consultant calendar needs client information on bookings
 * client should have phone number
