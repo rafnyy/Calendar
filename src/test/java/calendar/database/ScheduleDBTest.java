@@ -8,8 +8,7 @@ import static org.mockito.Mockito.*;
 import java.sql.Connection;
 
 import static org.junit.Assert.*;
-
-
+import static org.mockito.MockitoAnnotations.initMocks;
 
 
 public class ScheduleDBTest {
@@ -24,8 +23,9 @@ public class ScheduleDBTest {
 
     @BeforeClass
     public void setUp() throws Exception {
-        when(databaseConnection.getConnection()).thenReturn(connection);
+        initMocks(this);
 
+        when(databaseConnection.getConnection()).thenReturn(connection);
     }
 
     @AfterClass

@@ -54,7 +54,7 @@ public class Book {
         }
     }
 
-    private static class Booking {
+    public static class Booking {
         private UUID clientId;
         private UUID consultantId;
         private long startTime;

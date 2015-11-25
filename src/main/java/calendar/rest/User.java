@@ -92,21 +92,6 @@ public class User {
         return null;
     }
 
-//    @GET
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public AbstractUser getUserFromInfo(@QueryParam("firstName") String firstName, @QueryParam("lastName") String lastName, @QueryParam("email") String email) {
-//        log.log(Level.INFO, "Get user ID for {0} {1} with email address {2}", new Object[]{firstName, lastName, email});
-//
-//        try {
-//            return userDB.getUserByInfo(firstName, lastName, email);
-//        } catch (SQLException se) {
-//            log.log(Level.SEVERE, "Threw a SQLException retrieving a user.");
-//            log.log(Level.SEVERE, se.getMessage(), se);
-//        }
-//
-//        return null;
-//    }
-
     @POST
     @Path(Constants.Api.REGISTER)
     @Consumes(MediaType.APPLICATION_JSON)

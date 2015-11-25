@@ -1,5 +1,13 @@
 var app = angular.module('cal', ['ui.calendar']);
 
+var constants = {
+   'host': 'localhost',
+   'port': '8080',
+   'startDateParam': 'startDate=',
+   'endDateParam': 'endDate=',
+   'emailParam': 'email='
+};
+
 app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
     $scope.currentAction = "home";
     $scope.clientId = "";
@@ -25,7 +33,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
             var durationMillis = end - start;
             $http({
                     method: 'POST',
-                    url: 'http://localhost:8080/api/book',
+                    url: 'http://' + constants.host + ':' + constants.port + '/api/book',
                     headers: {'Content-Type':'application/json'},
                     data: { "clientId": $scope.clientId, "consultantId": $scope.consultantId, "startTime": start.valueOf(), "durationMillis": durationMillis }
                 }).then(function successCallback(response) {
@@ -51,7 +59,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
         events: function(start, end, timezone, callback) {
             $http({
                 method: 'GET',
-                url: 'http://localhost:8080/api/office-hours/' + $scope.consultantId + '?startDate=' + start.valueOf() + '&endDate=' + end.valueOf(),
+                url: 'http://' + constants.host + ':' + constants.port + '/api/office-hours/' + $scope.consultantId + '?' + constants.startDateParam + start.valueOf() + '&' + constants.endDateParam + end.valueOf(),
             }).then(function successCallback(response) {
                     var events = [];
 
@@ -107,7 +115,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
                 var durationMillis = end - start;
                 $http({
                         method: 'POST',
-                        url: 'http://localhost:8080/api/office-hours/set',
+                        url: 'http://' + constants.host + ':' + constants.port + '/api/office-hours/set',
                         headers: {'Content-Type':'application/json'},
                         data: { "consultantId": $scope.consultantId, "startTime": start.valueOf(), "durationMillis": durationMillis }
                 }).then(function successCallback(response) {
@@ -130,7 +138,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
             events: function(start, end, timezone, callback) {
                 $http({
                     method: 'GET',
-                    url: 'http://localhost:8080/api/office-hours/' + $scope.consultantId + '?startDate=' + start.valueOf() + '&endDate=' + end.valueOf(),
+                    url: 'http://' + constants.host + ':' + constants.port + '/api/office-hours/' + $scope.consultantId + '?' + constants.startDateParam + start.valueOf() + '&' + constants.endDateParam + end.valueOf(),
                 }).then(function successCallback(response) {
                         var events = [];
 
@@ -171,7 +179,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
         // get all consultants to build the consultant select drop down
         $select = $('#consultants');
         $http({
-          url: 'http://localhost:8080/api/user/consultant/list',
+          url: 'http://' + constants.host + ':' + constants.port + '/api/user/consultant/list',
           headers: {'Content-Type':'application/json'},
          }).then(function successCallback(response) {
                 $select.html('<option value="-1"></option>');
@@ -191,7 +199,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
     $scope.Login = function(email) {
         $http({
             method: 'GET',
-            url: 'http://localhost:8080/api/user?email=' + email,
+            url: 'http://' + constants.host + ':' + constants.port + '/api/user?' + constants.emailParam + email,
             headers: {'Content-Type':'application/json'},
        }).then(function successCallback(response) {
             if(response.data == "") {
@@ -217,7 +225,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
          }
         $http({
             method: 'POST',
-            url: 'http://localhost:8080/api/user/register',
+            url: 'http://' + constants.host + ':' + constants.port + '/api/user/register',
             headers: {'Content-Type':'application/json'},
             data: { "firstName": firstName, "lastName": lastName, "email": email, "isClient": isClient }
         }).then(function successCallback(response) {

@@ -7,6 +7,7 @@ import java.sql.Connection;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class UserDBTest {
     @Mock
@@ -17,8 +18,9 @@ public class UserDBTest {
 
     @BeforeClass
     public void setUp() throws Exception {
-        when(databaseConnection.getConnection()).thenReturn(connection);
+        initMocks(this);
 
+        when(databaseConnection.getConnection()).thenReturn(connection);
     }
 
     @AfterClass

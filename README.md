@@ -55,6 +55,7 @@ Written in AngularJS, the UI utilizes an open source package called fullcalendar
 * finish end to end tests
 * have end to end tests not require Calendar already running (stand it up)
 * UI tests (karma)
+* extensive UI error code handling
 * authentication and authorization, sign in with passwords
 * protect rest endpoints (use filter, look for auth token)
 * ssl
