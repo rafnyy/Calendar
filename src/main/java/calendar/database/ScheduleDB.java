@@ -1,6 +1,7 @@
 package calendar.database;
 
 import calendar.Constants;
+import calendar.schedule.AppointmentStart;
 import calendar.schedule.Schedule;
 import calendar.schedule.ScheduleDelta;
 import calendar.user.Consultant;
@@ -75,8 +76,13 @@ public class ScheduleDB {
             Timestamp time = resultSet.getTimestamp(Constants.Schedule.START);
 
             Constants.Schedule.STATUS status = Constants.Schedule.STATUS.valueOf(resultSet.getString(Constants.Schedule.TO_STATUS));
+            if(status.equals(Constants.Schedule.STATUS.BOOKED)) {
+                UUID clientId = (UUID)resultSet.getObject(Constants.Schedule.CLIENT_ID);
+                deltas.add(new AppointmentStart(time, status, clientId));
+            } else {
+                deltas.add(new ScheduleDelta(time, status));
+            }
 
-            deltas.add(new ScheduleDelta(time, status));
         }
 
         return new Schedule(consultant, startTime, endTime, deltas, startStatus);

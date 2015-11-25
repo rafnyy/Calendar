@@ -41,15 +41,13 @@ The API is written in Java and is RESTful. The only acceptable way to interact w
 The REST calls take most 2 main things to perform all operations. uuids and longs that represent milliseconds. Booking, for example, takes 2 uuids to represent the client and consultant. It also takes start time in milliseconds from the epoch, and duration in milliseconds. This should allow us to be timezone independent. Things like user registration have other values in the call.
 
 # UI
-Written in AngularJS, the UI utilizies an open source package called fullcalendar http://fullcalendar.io/ and it's Angular wrapper https://github.com/angular-ui/ui-calendar. The UI only interacts with the persistant data in the database through the REST API.
+Written in AngularJS, the UI utilizes an open source package called fullcalendar http://fullcalendar.io/ and it's Angular wrapper https://github.com/angular-ui/ui-calendar. The UI only interacts with the persistant data in the database through the REST API.
 
 # TODO list
-* client calendar should be able to see own bookings
-* consultant calendar needs client information on bookings
 * Uncaught TypeError: Cannot read property 'regional' of null
+* angular refactoring (cut down on duplicate and similiar code regarding fullcalendar)
 * cancel appointment, unset office hours
 * css styling, this project is ugly so far
-* angular refactoring (cut down on duplicate and similiar code regarding fullcalendar)
 * all rest endpoint java methods should return a Response with the relevant data in the body
 * get executable jar functional, path issues with static content, is it even being included
 * client should have phone number

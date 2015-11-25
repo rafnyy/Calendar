@@ -30,7 +30,7 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
                     data: { "clientId": $scope.clientId, "consultantId": $scope.consultantId, "startTime": start.valueOf(), "durationMillis": durationMillis }
                 }).then(function successCallback(response) {
                        var eventData = {
-                           title: 'BOOKING',
+                           title: 'NEW BOOKING',
                            start: start,
                            end: end
                        };
@@ -57,17 +57,30 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
 
                     var prevStatus = response.data.startStatus;
                     var prevStart = start;
+                    var prevBookedClientId = "";
 
                     for (var i = 0; i < response.data.deltas.length; i++) {
                         var currEnd = $.fullCalendar.moment(response.data.deltas[i].time);
 
                         addAvailable(prevStatus, prevStart, currEnd, events);
+                        if($scope.clientId == prevBookedClientId) {
+                            addBooked(prevStatus, prevBookedClientId, prevStart, currEnd, events);
+                        }
 
                         prevStatus = response.data.deltas[i].toStatus;
                         prevStart = currEnd;
+
+                        if(prevStatus == "BOOKED") {
+                            prevBookedClientId = response.data.deltas[i].clientId
+                        } else {
+                            prevBookedClientId = "";
+                        }
                     }
 
                     addAvailable(prevStatus, prevStart, currEnd, events);
+                    if($scope.clientId == prevBookedClientId) {
+                        addBooked(prevStatus, prevBookedClientId, prevStart, currEnd, events);
+                    }
 
                     callback(events);
            }, function errorCallback(response) {
@@ -123,15 +136,22 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
 
                         var prevStatus = response.data.startStatus;
                         var prevStart = start;
+                        var prevBookedClientId = "";
 
                         for (var i = 0; i < response.data.deltas.length; i++) {
                             var currEnd = $.fullCalendar.moment(response.data.deltas[i].time);
 
                             addAvailable(prevStatus, prevStart, currEnd, events);
-                            addBooked(prevStatus, prevStart, currEnd, events);
+                            addBooked(prevStatus, prevBookedClientId, prevStart, currEnd, events);
 
                             prevStatus = response.data.deltas[i].toStatus;
                             prevStart = currEnd;
+
+                            if(prevStatus == "BOOKED") {
+                                prevBookedClientId = response.data.deltas[i].clientId
+                            } else {
+                                prevBookedClientId = "";
+                            }
                         }
 
                         addAvailable(prevStatus, prevStart, end, events);
@@ -227,10 +247,10 @@ function addAvailable(status, start, end, events) {
     }
 }
 
-function addBooked(status, start, end, events) {
+function addBooked(status, bookedClientId, start, end, events) {
     if (status == 'BOOKED') {
         events.push({
-            title: "Booked by client",
+            title: "Booked by " + bookedClientId,
             start: start,
             end: end
         });
