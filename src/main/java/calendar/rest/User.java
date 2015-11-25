@@ -110,43 +110,49 @@ public class User {
     @POST
     @Path(Constants.Api.REGISTER)
     @Consumes(MediaType.APPLICATION_JSON)
-    public void register(UserInfo newUser) {
+    public UUID register(UserInfo newUser) {
         log.log(Level.INFO, "Registering new user {0} {1} with email address {2} where client={3}", new Object[]{newUser.getFirstName(), newUser.getLastName(), newUser.getEmail(), newUser.getIsClient()});
 
         try {
-            userDB.registerNewUser(newUser.getFirstName(), newUser.getLastName(), newUser.getEmail(), newUser.getIsClient());
+            return userDB.registerNewUser(newUser.getFirstName(), newUser.getLastName(), newUser.getEmail(), newUser.getIsClient()).getUUID();
         } catch (SQLException se) {
             log.log(Level.SEVERE, "Threw a SQLException registering a new user.");
             log.log(Level.SEVERE, se.getMessage(), se);
         }
+
+        return null;
     }
 
     @POST
     @Path(Constants.Api.REGISTER_CONSULTANT)
     @Consumes(MediaType.APPLICATION_JSON)
-    public void registerClient(UserInfo newUser) {
+    public UUID registerClient(UserInfo newUser) {
         log.log(Level.INFO, "Registering new client {0} {1} with email address {2}", new Object[]{newUser.getFirstName(), newUser.getLastName(), newUser.getEmail()});
 
         try {
-            userDB.registerNewClient(newUser.getFirstName(), newUser.getLastName(), newUser.getEmail());
+            return userDB.registerNewClient(newUser.getFirstName(), newUser.getLastName(), newUser.getEmail()).getUUID();
         } catch (SQLException se) {
             log.log(Level.SEVERE, "Threw a SQLException registering a new client.");
             log.log(Level.SEVERE, se.getMessage(), se);
         }
+
+        return null;
     }
 
     @POST
     @Path(Constants.Api.REGISTER_CLIENT)
     @Consumes(MediaType.APPLICATION_JSON)
-    public void registerConsultant(UserInfo newUser) {
+    public UUID registerConsultant(UserInfo newUser) {
         log.log(Level.INFO, "Registering new consultant {0} {1} with email address {2}", new Object[]{newUser.getFirstName(), newUser.getLastName(), newUser.getEmail()});
 
         try {
-            userDB.registerNewConsultant(newUser.getFirstName(), newUser.getLastName(), newUser.getEmail());
+            return userDB.registerNewConsultant(newUser.getFirstName(), newUser.getLastName(), newUser.getEmail()).getUUID();
         } catch (SQLException se) {
             log.log(Level.SEVERE, "Threw a SQLException registering a new consultant.");
             log.log(Level.SEVERE, se.getMessage(), se);
         }
+
+        return null;
     }
 
     private static class UserInfo {

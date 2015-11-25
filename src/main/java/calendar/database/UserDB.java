@@ -130,15 +130,15 @@ public class UserDB {
         return user;
     }
 
-    public void registerNewClient(String firstName, String lastName, String email) throws SQLException {
-        registerNewUser(firstName, lastName, email, true);
+    public Client registerNewClient(String firstName, String lastName, String email) throws SQLException {
+        return (Client)registerNewUser(firstName, lastName, email, true);
     }
 
-    public void registerNewConsultant(String firstName, String lastName, String email) throws SQLException {
-        registerNewUser(firstName, lastName, email, false);
+    public Consultant registerNewConsultant(String firstName, String lastName, String email) throws SQLException {
+        return (Consultant)registerNewUser(firstName, lastName, email, false);
     }
 
-    public void registerNewUser(String firstName, String lastName, String email, boolean isClient) throws SQLException {
+    public AbstractUser registerNewUser(String firstName, String lastName, String email, boolean isClient) throws SQLException {
         String insertTableSQL = "INSERT INTO " + USERS_TABLE
                 + "(" + Constants.User.FIRST_NAME + ", " + Constants.User.LAST_NAME + ", " + Constants.User.EMAIL + ", " + Constants.User.UUID_COL_NAME + ", " + Constants.User.IS_CLIENT + ") VALUES"
                 + "(:" + Constants.User.FIRST_NAME + ", :" + Constants.User.LAST_NAME + ", :" + Constants.User.EMAIL + ", :" + Constants.User.UUID_COL_NAME + ", :" + Constants.User.IS_CLIENT + ")";
@@ -152,6 +152,6 @@ public class UserDB {
 
         preparedStatement.executeUpdate();
 
-//        this.getUserByInfo(firstName, lastName, email)
+        return getUserByInfo(firstName, lastName, email);
     }
 }

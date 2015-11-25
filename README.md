@@ -44,16 +44,16 @@ The REST calls take most 2 main things to perform all operations. uuids and long
 Written in AngularJS, the UI utilizies an open source package called fullcalendar http://fullcalendar.io/ and it's Angular wrapper https://github.com/angular-ui/ui-calendar. The UI only interacts with the persistant data in the database through the REST API.
 
 # TODO list
-* Need to return and set clientId or consultantId after registering new user so we can load calendar
-* Uncaught TypeError: Cannot read property 'clone' of null
 * client calendar should be able to see own bookings
 * consultant calendar needs client information on bookings
-* client should have phone number
+* Uncaught TypeError: Cannot read property 'regional' of null
 * cancel appointment, unset office hours
 * css styling, this project is ugly so far
 * angular refactoring (cut down on duplicate and similiar code regarding fullcalendar)
+* all rest endpoint java methods should return a Response with the relevant data in the body
 * get executable jar functional, path issues with static content, is it even being included
-* unit tests
+* client should have phone number
+* finish unit tests
 * finish end to end tests
 * have end to end tests not require Calendar already running (stand it up)
 * UI tests (karma)

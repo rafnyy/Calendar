@@ -190,11 +190,11 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
     };
 
     $scope.Register = function(type, firstName, lastName, email) {
-           if($scope.type == "client") {
-                isClient = true;
-           } else {
-                isClient = false;
-           }
+         if(type == "client") {
+             isClient = true;
+         } else {
+             isClient = false;
+         }
         $http({
             method: 'POST',
             url: 'http://localhost:8080/api/user/register',
@@ -202,8 +202,10 @@ app.controller('calCtrl', ['$scope', '$http', function ($scope, $http) {
             data: { "firstName": firstName, "lastName": lastName, "email": email, "isClient": isClient }
         }).then(function successCallback(response) {
             if(isClient) {
+               $scope.clientId = response.data;
                $scope.currentAction = "clientCal";
            } else {
+               $scope.consultantId = response.data;
                $scope.currentAction = "consultantCal";
                $('#consultant-calendar').fullCalendar('refetchEvents');
            }
