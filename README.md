@@ -1,6 +1,9 @@
 # Calendar
 
 This calendar has three layers. UI, API, and DB. The design principle was the put something together that not only accomplishes the basic goals of the calendar (booking appointments and setting office hours) but also allows for easy addition or replacement of features. I wanted future API and DB schema changes to be additive. I also wanted to be able to replace pieces of technology if required. For eaxmple, switching from Postgres to any other database technology should be fairly painless. Only files in the database directory need to be changed. If it is a SQL based solution, only configuration details need to be changed.
+between running in the IDE vs. the executable jar in regards to loading the static content. It would also provide what port to run on and the connection information for the database.
+
+As for running the application, currently it is set up to run as a simple Java program. Since the DB is on AWS no set up there is needed. One only needs to compile to *.java and execute the main method in the Calendar class. This will serve the website at http://localhost:8080. This is probably most easily done through some sort of IDE. Eclipse, IntelliJ, or NetBeans should be able to read the pom.xml and set everything up automatically.
 
 #Database
 The database is two simple Postgres databases. 
@@ -43,13 +46,14 @@ The REST calls take most 2 main things to perform all operations. uuids and long
 # UI
 Written in AngularJS, the UI utilizes an open source package called fullcalendar http://fullcalendar.io/ and it's Angular wrapper https://github.com/angular-ui/ui-calendar. The UI only interacts with the persistant data in the database through the REST API.
 
-# TODO list
+# TODO list to be production ready
 * Uncaught TypeError: Cannot read property 'regional' of null
-* angular refactoring (cut down on duplicate and similiar code regarding fullcalendar)
+* angular refactoring (cut down on duplicate and similar code regarding fullcalendar)
 * cancel appointment, unset office hours
+* Show human readable information whenever a clientId or consultantId shows up in the UI (can be retrieved via simple REST GET)
 * css styling, this project is ugly so far
 * all rest endpoint java methods should return a Response with the relevant data in the body
-* get executable jar functional, path issues with static content, is it even being included
+* get executable jar functional, path issues with static content, is it even being included?
 * client should have phone number
 * finish unit tests
 * finish end to end tests
@@ -59,3 +63,6 @@ Written in AngularJS, the UI utilizes an open source package called fullcalendar
 * authentication and authorization, sign in with passwords
 * protect rest endpoints (use filter, look for auth token)
 * ssl
+* CI pipeline to automatically test and generate deployable artifacts on commit
+* about page with build/version info
+* Arivale branding, copyright, listening requirements
