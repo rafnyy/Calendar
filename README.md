@@ -39,7 +39,7 @@ WITH (
 );
 
 # API
-The API is written in Java and is RESTful. The only acceptable way to interact with the database and book an appointment or set avaialability is through this interface. This layer also has the web container, which is embedded Jetty. For simplicity the API actually serves the UI through the same web container as the API.
+The API is written in Java and is RESTful. The only acceptable way to interact with the database and book an appointment or set availability is through this interface. This layer also has the web container, which is embedded Jetty. For simplicity the API actually serves the UI through the same web container as the API.
 
 The REST calls take most 2 main things to perform all operations. uuids and longs that represent milliseconds. Booking, for example, takes 2 uuids to represent the client and consultant. It also takes start time in milliseconds from the epoch, and duration in milliseconds. This should allow us to be timezone independent. Things like user registration have other values in the call.
 
