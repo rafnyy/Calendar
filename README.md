@@ -43,8 +43,12 @@ The API is written in Java and is RESTful. The only acceptable way to interact w
 
 The REST calls take most 2 main things to perform all operations. uuids and longs that represent milliseconds. Booking, for example, takes 2 uuids to represent the client and consultant. It also takes start time in milliseconds from the epoch, and duration in milliseconds. This should allow us to be timezone independent. Things like user registration have other values in the call.
 
+The API uses Jersey and Guice to implement the REST endpoints and for injection, to allow for more controllable testing. Jackson helps process the JSON and Apache's HTTP client is used to handle HTTP requests and responses. JDBC for writing Java code to connect to the database.
+
+The tests for the API uses JUnit for unit tests and TestNG to run the end to end functional tests (hit actual running endpoints). Mockito is used across both to build mocks rapidly.
+
 # UI
-Written in AngularJS, the UI utilizes an open source package called fullcalendar http://fullcalendar.io/ and it's Angular wrapper https://github.com/angular-ui/ui-calendar. The UI only interacts with the persistant data in the database through the REST API.
+Written in AngularJS, the UI utilizes an open source package called fullcalendar http://fullcalendar.io/ and it's Angular wrapper https://github.com/angular-ui/ui-calendar. The UI only interacts with the persistent data in the database through the REST API.
 
 # TODO list to be production ready
 * Uncaught TypeError: Cannot read property 'regional' of null

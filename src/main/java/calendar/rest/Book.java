@@ -4,7 +4,6 @@ import calendar.Constants;
 import calendar.database.ScheduleDB;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.codehaus.jackson.annotate.JsonCreator;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
